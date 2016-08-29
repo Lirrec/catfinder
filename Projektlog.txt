@@ -1,0 +1,5 @@
+29.08.16:
+	Dev-Tools auf movii installiert ( git, tortoisegit, notepad++, cmake )
+	Installation naoqi-sdk ( inklusive python27, cmake )
+	-> Einrichtung IDE Visual Studio 2015 gescheitert (naoqi SDK ist ausgelegt für VS 2010)
+	Mögliche Alternative: Libqi selbst kompilieren (mit VS 2015)
