@@ -3,3 +3,26 @@
 	Installation naoqi-sdk ( inklusive python27, cmake )
 	-> Einrichtung IDE Visual Studio 2015 gescheitert (naoqi SDK ist ausgelegt für VS 2010)
 	Mögliche Alternative: Libqi selbst kompilieren (mit VS 2015)
+	
+30.08.16:
+	Kompilieren von libqi:
+	- vorkompiliertes boost (32bit, vs14) runtergeladen, BOOST_ROOT angegeben, symlink im boost root lib -> lib32-msvc-14.0
+	- openssl latest runtergeladen, OPENSSL_ROOT_DIR angegeben 
+	- PTHREAD build runtergeladen und FindThreads.cmake editiert ( Zeile 198++):
+	  gibt nun hardcoded zurück: 
+			set(PTHREAD_LIBRARIES "D:/NAO2016/pthread/lib/pthreadVCE2.lib")
+			set(PTHREAD_INCLUDE_DIRS "D:/NAO2016/pthread/include")
+	- OPTIONAL, je nachdem ob QI_WITH_TESTS definiert wird:
+		- C:\Program Files\CMake\share\cmake-3.6\Modules\FindGtest.cmake kopiert nach FindGtest_MAIN.cmake
+		-  googletest runtergeladen und mit vs14 compiliert (googletest/googletest/mscv/gtest-md.sln), -DGTEST_ROOT=D:\NAO2016\googletest\googletest
+	- Fertige Cmdline:
+		qibuild configure -DQI_WITH_TESTS=OFF -DBOOST_ROOT=D:\NAO2016\boost_1_59_0 -DOPENSSL_ROOT_DIR=D:\NAO2016\openssl-1.0.1t-vs2015 -DBUILD_EXAMPLES=OFF 
+		qibuild configure --32-bits --release -j 8 -DQI_WITH_TESTS=OFF -DBOOST_ROOT=D:\NAO2016\boost_1_61_0 -DOPENSSL_ROOT_DIR=D:\NAO2016\openssl-1.0.1t-vs2015 -DBUILD_EXAMPLES=OFF
+	- Compilerfehler:
+		- Bei der solution in den defines _ENABLE_ATOMIC_ALIGNMENT_FIX hinzugefügt.
+		- In den Module Properties neue Plattform Win32 hinzugefügt, evtl den intermediate und build-patch von der x64 solution kopieren.
+		- Module Properties -> c++ -> general -> multiprozessor compilation aktiviert
+		- In den Linker "Additional Options" die Machine X64 durch X86 ersetzt.
+		- Copy-Constructor bei ScopedLockRead{Write,Only} hinzugefügt ?????
+		- trackable.hxx "using BindTransform..." funktioniert nicht, von hand alle drei Vorkommen durch die lange Version ersetzt.
+		
