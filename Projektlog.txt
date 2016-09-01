@@ -26,3 +26,9 @@
 		- Copy-Constructor bei ScopedLockRead{Write,Only} hinzugefügt ?????
 		- trackable.hxx "using BindTransform..." funktioniert nicht, von hand alle drei Vorkommen durch die lange Version ersetzt.
 		
+		
+	qitest visual studio projekt angelegt:
+		- qi.lib manuell hinzugefügt
+		- include dirs: libqi folder, libqi sdk folder, boost include dirs
+		- lib dirs: boost lib dir, openssl lib dir
+		
