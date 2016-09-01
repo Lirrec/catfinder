@@ -7,8 +7,8 @@ int main(int argc, char** argv)
 	app.startSession(); // connect the session
 	qi::SessionPtr session = app.session();
 
-	qi::AnyObject danceManager = session->service("ALTextToSpeech");
-	danceManager.call<void>("say", "test");
+	qi::AnyObject tts = session->service("ALTextToSpeech");
+	tts.call<void>("say", std::string("test"));
 
 	return 0;
 }

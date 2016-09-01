@@ -4,7 +4,7 @@
 	-> Einrichtung IDE Visual Studio 2015 gescheitert (naoqi SDK ist ausgelegt für VS 2010)
 	Mögliche Alternative: Libqi selbst kompilieren (mit VS 2015)
 	
-30.08.16:
+30.08.16 - 01.09.16:
 	Kompilieren von libqi:
 	- vorkompiliertes boost (32bit, vs14) runtergeladen, BOOST_ROOT angegeben, symlink im boost root lib -> lib32-msvc-14.0
 	- openssl latest runtergeladen, OPENSSL_ROOT_DIR angegeben 
@@ -19,16 +19,22 @@
 		qibuild configure -DQI_WITH_TESTS=OFF -DBOOST_ROOT=D:\NAO2016\boost_1_59_0 -DOPENSSL_ROOT_DIR=D:\NAO2016\openssl-1.0.1t-vs2015 -DBUILD_EXAMPLES=OFF 
 		qibuild configure --32-bits --release -j 8 -DQI_WITH_TESTS=OFF -DBOOST_ROOT=D:\NAO2016\boost_1_61_0 -DOPENSSL_ROOT_DIR=D:\NAO2016\openssl-1.0.1t-vs2015 -DBUILD_EXAMPLES=OFF
 	- Compilerfehler:
-		- Bei der solution in den defines _ENABLE_ATOMIC_ALIGNMENT_FIX hinzugefügt.
 		- In den Module Properties neue Plattform Win32 hinzugefügt, evtl den intermediate und build-patch von der x64 solution kopieren.
+		- Bei der solution in den defines _ENABLE_ATOMIC_ALIGNMENT_FIX hinzugefügt.
 		- Module Properties -> c++ -> general -> multiprozessor compilation aktiviert
 		- In den Linker "Additional Options" die Machine X64 durch X86 ersetzt.
+	- Source Changes:	
 		- Copy-Constructor bei ScopedLockRead{Write,Only} hinzugefügt ?????
 		- trackable.hxx "using BindTransform..." funktioniert nicht, von hand alle drei Vorkommen durch die lange Version ersetzt.
-		
 		
 	qitest visual studio projekt angelegt:
 		- qi.lib manuell hinzugefügt
 		- include dirs: libqi folder, libqi sdk folder, boost include dirs
 		- lib dirs: boost lib dir, openssl lib dir
 		
+	libqicore compilieren
+		cmake -DQI_WITH_TESTS=OFF -DQI_DIR=E:\catfinder\libqi-sdk\share\cmake\qi -DOPENSSL_ROOT_DIR=E:\catfinder\openssl-1.0.1t-vs2015 -DBOOST_ROOT=E:\catfinder\boost_1_61_0 -Dqimodule_DIR=E:\catfinder\libqi-sdk\share\cmake\qimodule ..
+	libqi/bin compilieren:
+		cmake -DQI_DIR=E:\catfinder\libqi-sdk\share\cmake\qi -DQICORE_DIR=E:\catfinder\libqicore-sdk\share\cmake\qicore\ -DOPENSSL_ROOT_DIR=E:\catfinder\openssl-1.0.1t-vs2015 -DBOOST_ROOT=E:\catfinder\boost_1_61_0 ..
+		
+	1.9.2016 16:00, Aldebaran Robotics stellt fest, dass sie seit zwei Jahren vergessen haben ihre libqicore commits auf github zu pushen...
