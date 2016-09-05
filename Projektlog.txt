@@ -37,4 +37,9 @@
 	libqi/bin compilieren:
 		cmake -DQI_DIR=E:\catfinder\libqi-sdk\share\cmake\qi -DQICORE_DIR=E:\catfinder\libqicore-sdk\share\cmake\qicore\ -DOPENSSL_ROOT_DIR=E:\catfinder\openssl-1.0.1t-vs2015 -DBOOST_ROOT=E:\catfinder\boost_1_61_0 ..
 		
-	1.9.2016 16:00, Aldebaran Robotics stellt fest, dass sie seit zwei Jahren vergessen haben ihre libqicore commits auf github zu pushen...
+1.9.2016 16:00, Aldebaran Robotics stellt fest, dass sie seit zwei Jahren vergessen haben ihre libqicore commits auf github zu pushen...
+5.9.2016 
+		NAO Befehl um Kamera zu streamen:
+		gst-launch-0.10 -v v4l2src device=/dev/video1 ! video/x-raw-yuv,width=640,height=480,framerate=30/1 ! ffmpegcolorspace ! jpegenc ! multipartmux! tcpserversink port=3000
+		- /dev/video0 ist die obere Kamera, die ist gerade nach vorne ausgerichtet
+		- /dev/video1 ist die untere Kamera, die ist mehr Richtung Boden ausgerichtet.
