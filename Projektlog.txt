@@ -16,16 +16,14 @@
 		- C:\Program Files\CMake\share\cmake-3.6\Modules\FindGtest.cmake kopiert nach FindGtest_MAIN.cmake
 		-  googletest runtergeladen und mit vs14 compiliert (googletest/googletest/mscv/gtest-md.sln), -DGTEST_ROOT=D:\NAO2016\googletest\googletest
 	- Fertige Cmdline:
-		qibuild configure -DQI_WITH_TESTS=OFF -DBOOST_ROOT=D:\NAO2016\boost_1_59_0 -DOPENSSL_ROOT_DIR=D:\NAO2016\openssl-1.0.1t-vs2015 -DBUILD_EXAMPLES=OFF 
-		qibuild configure --32-bits --release -j 8 -DQI_WITH_TESTS=OFF -DBOOST_ROOT=D:\NAO2016\boost_1_61_0 -DOPENSSL_ROOT_DIR=D:\NAO2016\openssl-1.0.1t-vs2015 -DBUILD_EXAMPLES=OFF
+		cmake -G"Visual Studio 14 2015 Win64" -DQI_WITH_TESTS=OFF -DBOOST_ROOT=E:\catfinder\qideps\boost_1_61_0_x64 -DOPENSSL_ROOT_DIR=E:\catfinder\qideps\openssl-1.0.1t-vs2015 -DBUILD_EXAMPLES=OFF -DCMAKE_INSTALL_PREFIX=E:\catfinder\libqi\build\sdk\ ..
 	- Compilerfehler:
-		- In den Module Properties neue Plattform Win32 hinzugefügt, evtl den intermediate und build-patch von der x64 solution kopieren.
-		- Bei der solution in den defines _ENABLE_ATOMIC_ALIGNMENT_FIX hinzugefügt.
+		- Bei der solution in den defines _ENABLE_ATOMIC_ALIGNMENT_FIX hinzugefügt. Alternativ per add_definitions("_ENAB... in die cmakelists einfügen
 		- Module Properties -> c++ -> general -> multiprozessor compilation aktiviert
-		- In den Linker "Additional Options" die Machine X64 durch X86 ersetzt.
 	- Source Changes:	
 		- Copy-Constructor bei ScopedLockRead{Write,Only} hinzugefügt ?????
 		- trackable.hxx "using BindTransform..." funktioniert nicht, von hand alle drei Vorkommen durch die lange Version ersetzt.
+	NOTIZEN: shared standardlibrary und SEH exceptions aktivieren? Scheint in der release version gut zu funktionieren, in der debug nicht...
 		
 	qitest visual studio projekt angelegt:
 		- qi.lib manuell hinzugefügt
@@ -33,7 +31,7 @@
 		- lib dirs: boost lib dir, openssl lib dir
 		
 	libqicore compilieren
-		cmake -DQI_WITH_TESTS=OFF -DQI_DIR=E:\catfinder\libqi-sdk\share\cmake\qi -DOPENSSL_ROOT_DIR=E:\catfinder\openssl-1.0.1t-vs2015 -DBOOST_ROOT=E:\catfinder\boost_1_61_0 -Dqimodule_DIR=E:\catfinder\libqi-sdk\share\cmake\qimodule ..
+		cmake -G"Visual Studio 14 2015 Win64" -DQI_WITH_TESTS=OFF -DQI_DIR=E:\catfinder\qideps\libqi-sdk\share\cmake\qi -DOPENSSL_ROOT_DIR=E:\catfinder\qideps\openssl-1.0.1t-vs2015 -DBOOST_ROOT=E:\catfinder\qideps\boost_1_61_0_x64 -Dqimodule_DIR=E:\catfinder\qideps\libqi-sdk\share\cmake\qimodule -DCMAKE_INSTALL_PREFIX=E:\catfinder\libqicore\build\sdk\ ..
 	libqi/bin compilieren:
 		cmake -DQI_DIR=E:\catfinder\libqi-sdk\share\cmake\qi -DQICORE_DIR=E:\catfinder\libqicore-sdk\share\cmake\qicore\ -DOPENSSL_ROOT_DIR=E:\catfinder\openssl-1.0.1t-vs2015 -DBOOST_ROOT=E:\catfinder\boost_1_61_0 ..
 		
