@@ -11,6 +11,7 @@ public class catfinder_ue4 : ModuleRules
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 
         bUseRTTI = true; // turn on RTTI
+        UEBuildConfiguration.bForceEnableExceptions = true;
 
         // Uncomment if you are using Slate UI
         // PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });
@@ -29,8 +30,7 @@ public class catfinder_ue4 : ModuleRules
         if (Target.Configuration != UnrealTargetConfiguration.Shipping)
         {
             PublicAdditionalLibraries.Add("qi.lib");
-        } else
-        {
+        } else {
             PublicAdditionalLibraries.Add("qi.lib");
         }
 
