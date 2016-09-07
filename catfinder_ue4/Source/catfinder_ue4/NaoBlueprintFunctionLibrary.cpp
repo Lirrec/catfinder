@@ -8,11 +8,11 @@
 
 	
 
-void UNaoBlueprintFunctionLibrary::test() {
+void UNaoBlueprintFunctionLibrary::test(FString naoIP) {
 
 	try {
 		qi::Session session; 
-		session.connect("tcp://192.168.1.13");
+		session.connect(TCHAR_TO_UTF8(*naoIP));
 		qi::AnyObject tts = session.service("ALTextToSpeech");
 		tts.call<void>("say", std::string("test"));
 		session.close();

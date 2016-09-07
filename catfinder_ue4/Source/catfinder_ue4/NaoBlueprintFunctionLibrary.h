@@ -14,8 +14,12 @@ class CATFINDER_UE4_API UNaoBlueprintFunctionLibrary : public UBlueprintFunction
 	GENERATED_BODY()
 	
 public:
-	UFUNCTION(BlueprintCallable, Category = "Test")
-	static void test();
+	/*UPROPERTY(BlueprintReadWrite, Category = "NAO")
+	static FString naoIP = TEXT("192.168.1.13");
+	*/
+
+	UFUNCTION(BlueprintCallable, Category = "NAO")
+	static void test(FString naoIP = TEXT("192.168.1.13"));
 	
 	
 };
