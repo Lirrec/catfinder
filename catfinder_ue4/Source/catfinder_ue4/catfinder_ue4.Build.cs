@@ -28,7 +28,7 @@ public class catfinder_ue4 : ModuleRules
 
         if (Target.Configuration != UnrealTargetConfiguration.Shipping)
         {
-            PublicAdditionalLibraries.Add("qi_d.lib");
+            PublicAdditionalLibraries.Add("qi.lib");
         } else
         {
             PublicAdditionalLibraries.Add("qi.lib");
