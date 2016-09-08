@@ -47,3 +47,5 @@
 8.9.2016
 		VlvMedia Plugin hinzugefügt. Manuell tcp:// und .sdp zu den unterstützten formaten/extensions hinzugefügt ( in VlcMediaFactoryModule.cpp ).
 		Stream funktioniert :)
+		GREAT PROGRESS
+		UE-Funktionen für Bewegung (moveTo), TextToSpeech und die drehung einzelner Gelenke eingefügt. Gelenke müssen bis jetzt allerdings noch mit ihrer NaoQI internen bezeichnung adressiert werden.
