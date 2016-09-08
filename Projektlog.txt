@@ -44,3 +44,6 @@
 7.9.2016	GREAT PROGRESS
 		Toolchain für IF017-WS01 Funktionsfähig bekommen.
 		Testfunktion mit NAO-Sprachausgabe einen Ziel-IP-Parameter hinzugefügt. (ES KOMPILIERT, ES KOMPILIIIIIEEEERT!)
+8.9.2016
+		VlvMedia Plugin hinzugefügt. Manuell tcp:// und .sdp zu den unterstützten formaten/extensions hinzugefügt ( in VlcMediaFactoryModule.cpp ).
+		Stream funktioniert :)
