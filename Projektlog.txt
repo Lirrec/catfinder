@@ -49,3 +49,10 @@
 		Stream funktioniert :)
 		GREAT PROGRESS
 		UE-Funktionen für Bewegung (moveTo), TextToSpeech und die drehung einzelner Gelenke eingefügt. Gelenke müssen bis jetzt allerdings noch mit ihrer NaoQI internen bezeichnung adressiert werden.
+
+12.9.2016
+		Vergleich verschiedener streamingcodecs, aktueller sieger: mpeg4 mit 300kb/s bitrate
+		Einrichtung Adminuser am roboterpc. User: ".\Studiadmin" PW: "catfinder"
+13.9.2016		
+		Chemnitz: Dr. John Nassour -> Nao guru
+		libqi: Vorsicht bei Funktionen die ein qi::FutureSync<T> zurückgeben. das FutureSync wirft ne exception im destructor die man nicht fangen kann. Deshalb muss das von einer Funktion zurückgegebene FutureSync unbedingt in ein qi::future gespeichert werden. Dann kann man mit wait() und danach hasError() / error() die Fehler behandeln.

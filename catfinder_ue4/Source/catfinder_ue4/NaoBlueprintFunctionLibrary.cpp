@@ -4,7 +4,7 @@
 #include "NaoBlueprintFunctionLibrary.h"
 
 #include <qi/session.hpp>
-#include <qi/applicationsession.hpp>
+#include <qi/future.hpp>
 
 	
 
@@ -44,6 +44,10 @@ void UNaoBlueprintFunctionLibrary::text2SpeechSay(FString message, FString naoIP
 	}
 }
 
+int UNaoBlueprintFunctionLibrary::getTemperature(FString deviceName, FString naoIP) {
+	return getALMemoryInt(TEXT("Device/SubDeviceList/") + deviceName +TEXT("/Temperature/Sensor/Value"), naoIP);
+}
+
 void UNaoBlueprintFunctionLibrary::angleInterpolation(FString targetJoint, float degrees, float time, bool isAbsolute, FString naoIP) {
 	try {
 		qi::Session session;
@@ -68,6 +72,30 @@ void UNaoBlueprintFunctionLibrary::moveTo(float xDistanceInMeters, float yDistan
 		UE_LOG(LogTemp, Warning, TEXT("QI Exception: %s"), ANSI_TO_TCHAR(e.what()));
 	}
 }
+
+
+int UNaoBlueprintFunctionLibrary::getALMemoryInt(FString key, FString naoIP) {
+	try {
+		qi::Session session;
+		qi::Future<void> future = session.connect(TCHAR_TO_UTF8(*naoIP));
+		future.wait();
+		if (future.hasError()) {
+			UE_LOG(LogTemp, Warning, TEXT("Future error %s"), ANSI_TO_TCHAR( future.error().c_str() ));
+			return -1;
+		}
+
+		qi::AnyObject tts = session.service("ALasdfMemory");
+		
+		return tts.call<int>("getData", TCHAR_TO_UTF8(*key));
+	}
+	catch (const std::exception& e) {
+		UE_LOG(LogTemp, Warning, TEXT("std Exception: %s"), ANSI_TO_TCHAR(e.what()));
+		return -1;
+	}
+}
+
+
+
 //qi::Session UNaoBlueprintFunctionLibrary::getSession(FString naoIP) {
 
 	//return NULL;
