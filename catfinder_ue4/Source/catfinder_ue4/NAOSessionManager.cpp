@@ -1,11 +1,12 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "catfinder_ue4.h"
+#include <map>
 #include "NAOSessionManager.h"
 
-NAOSessionManager* NAOSessionManager::_instance = NULL;
+NAOSessionManager* NAOSessionManager::_instance = nullptr;
 
-std::map<std::string, std::shared_ptr<qi::Session>> mapSessions;
+TMap<FString, UNAOSession*> sessionMap;
 
 NAOSessionManager::NAOSessionManager()
 {
@@ -15,34 +16,28 @@ NAOSessionManager::~NAOSessionManager()
 {
 }
 
-NAOSessionManager* NAOSessionManager::Instance() {
+NAOSessionManager* NAOSessionManager::instance() {
 	if(!NAOSessionManager::_instance) {
 		NAOSessionManager::_instance = new NAOSessionManager();
 	}
 	return NAOSessionManager::_instance;
 }
-/** Returns a shared_ptr to a libQI Session which is succesfully connected to a provided IP.
+
+/** Returns a shared_ptr to a NaoSession which is succesfully connected to a provided IP.
 	Returns NULL if there's an error during the connecting process.
 */
-std::shared_ptr<qi::Session> NAOSessionManager::getSession(std::string ip) {
-	if (!mapSessions.count(ip)) {
-		//mapSessions[ip];
-		std::shared_ptr<qi::Session> session(new qi::Session);
-		try {
-			qi::Future<void> future = session->connect(ip);
-			future.wait();
-			if (future.hasError()) {
-				UE_LOG(LogTemp, Warning, TEXT("Future error %s"), ANSI_TO_TCHAR(future.error().c_str()));
-				return NULL;
-			}
-		}
-		catch (const std::exception& e) {
-			UE_LOG(LogTemp, Warning, TEXT("std Exception: %s"), ANSI_TO_TCHAR(e.what()));
-			//mapSessions.erase(ip);
-			return NULL;
-		}
-		mapSessions.insert(std::pair<std::string,std::shared_ptr<qi::Session>>(ip,session));
+UNAOSession* NAOSessionManager::getSession(FString ip) {
+	if (!sessionMap.Contains(ip)) {
+		
+		auto session = NewObject<UNAOSession>();
+		
+		session->connect(ip);
+
+		if (session->getState() != ENAOIState::connected)
+			return nullptr;
+		
+		sessionMap.Add(ip,session);
 	}
-	return mapSessions.at(ip);
+	return sessionMap[ip];
 	//return NULL;
 }

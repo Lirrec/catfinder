@@ -1,8 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
-#include <qi/session.hpp>
-#include <qi/future.hpp>
+#include "NAOSession.h"
+
 /**
  * 
  */
@@ -15,6 +15,6 @@ private:
 	~NAOSessionManager();
 
 public:
-	static NAOSessionManager* Instance();
-	std::shared_ptr<qi::Session> getSession(std::string ip);
+	static NAOSessionManager* instance();
+	UNAOSession* getSession(FString ip);
 };
