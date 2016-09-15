@@ -32,13 +32,6 @@ void UNAOSession::connect(FString naoIP) {
 	State = ENAOIState::connecting;
 	connectionFuture = session->connect(TCHAR_TO_UTF8(*naoIP));
 
-	/*future.wait();
-	if (future.hasError()) {
-		UE_LOG(LogTemp, Warning, TEXT("Future error %s"), ANSI_TO_TCHAR(future.error().c_str()));
-		State = ENAOIState::disconnected;
-		return;
-	}*/
-
 	UE_LOG(LogTemp, Warning, TEXT("NaoSession connecting to %s"), *naoIP);
 	State = ENAOIState::connecting;
 }
@@ -54,6 +47,7 @@ bool UNAOSession::isConnected() {
 		if (connectionFuture.isFinished()) {
 			if (connectionFuture.hasError()) {
 				UE_LOG(LogTemp, Error, TEXT("NaoSession failed to connect: '%s'"), ANSI_TO_TCHAR(connectionFuture.error().c_str()));
+				State = ENAOIState::disconnected;
 				return false;
 			}
 			else {
@@ -120,33 +114,13 @@ void UNAOSession::moveTo(float xDistanceInMeters, float yDistanceInMeters, float
 
 
 void UNAOSession::moveToward(float xSpeedRelative, float ySpeedRelative, float thetaSpeedRelative) {
-	if (!session || !session->isConnected()) {
-		UE_LOG(LogTemp, Warning, TEXT("Nao Session not connected"));
-		return;
-	}
-
-	try {
-		qi::AnyObject tts = session->service("ALMotion");
-		tts.call<void>("moveToward", xSpeedRelative, ySpeedRelative, thetaSpeedRelative);
-	}
-	catch (std::exception& e) {
-		UE_LOG(LogTemp, Warning, TEXT("QI Exception: %s"), ANSI_TO_TCHAR(e.what()));
-	}
+	if (!isConnected()) return;
+	callServiceVoidAsync(session, AsyncCalls, "ALMotion", "moveToward", xSpeedRelative, ySpeedRelative, thetaSpeedRelative);
 }
 
 void UNAOSession::stopMove() {
-	if (!session || !session->isConnected()) {
-		UE_LOG(LogTemp, Warning, TEXT("Nao Session not connected"));
-		return;
-	}
-
-	try {
-		qi::AnyObject tts = session->service("ALMotion");
-		tts.call<void>("stopMove");
-	}
-	catch (std::exception& e) {
-		UE_LOG(LogTemp, Warning, TEXT("QI Exception: %s"), ANSI_TO_TCHAR(e.what()));
-	}
+	if (!isConnected()) return;
+	callServiceVoidAsync(session, AsyncCalls, "ALMotion", "stopMove");
 }
 
 
@@ -154,7 +128,7 @@ int UNAOSession::getALMemoryInt(FString key) {
 	if (isConnected()) return -1;
 
 	try {
-		qi::AnyObject tts = session->service("ALasdfMemory");
+		qi::AnyObject tts = session->service("ALMemory");
 
 		return tts.call<int>("getData", TCHAR_TO_UTF8(*key));
 	}
