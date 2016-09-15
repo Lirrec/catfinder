@@ -56,6 +56,12 @@ public:
 		void moveTo(float xDistanceInMeters, float yDistacneInMeters, float thetaInRadians);
 
 	UFUNCTION(BlueprintCallable, Category = "NAO")
+		void moveToward(float xSpeedRelative, float ySpeedRelative, float thetaSpeedRelative);
+
+	UFUNCTION(BlueprintCallable, Category = "NAO")
+		void stopMove();
+
+	UFUNCTION(BlueprintCallable, Category = "NAO")
 		int getALMemoryInt(FString key);
 
 private:

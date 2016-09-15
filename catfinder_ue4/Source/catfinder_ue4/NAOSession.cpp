@@ -46,6 +46,7 @@ void UNAOSession::connect(FString naoIP) {
 void UNAOSession::disconnect() {
 	UE_LOG(LogTemp, Warning, TEXT("NaoSession disconnecting from %s"), ANSI_TO_TCHAR(session->url().str().c_str()));
 	session->close();
+	State = ENAOIState::disconnected;
 }
 
 bool UNAOSession::isConnected() {
@@ -115,6 +116,37 @@ void UNAOSession::angleInterpolation(FString targetJoint, float degrees, float t
 void UNAOSession::moveTo(float xDistanceInMeters, float yDistanceInMeters, float thetaInRadians) {
 	if (!isConnected()) return;
 	callServiceVoidAsync(session, AsyncCalls, "ALMotion", "moveTo", xDistanceInMeters, yDistanceInMeters, thetaInRadians);
+}
+
+
+void UNAOSession::moveToward(float xSpeedRelative, float ySpeedRelative, float thetaSpeedRelative) {
+	if (!session || !session->isConnected()) {
+		UE_LOG(LogTemp, Warning, TEXT("Nao Session not connected"));
+		return;
+	}
+
+	try {
+		qi::AnyObject tts = session->service("ALMotion");
+		tts.call<void>("moveToward", xSpeedRelative, ySpeedRelative, thetaSpeedRelative);
+	}
+	catch (std::exception& e) {
+		UE_LOG(LogTemp, Warning, TEXT("QI Exception: %s"), ANSI_TO_TCHAR(e.what()));
+	}
+}
+
+void UNAOSession::stopMove() {
+	if (!session || !session->isConnected()) {
+		UE_LOG(LogTemp, Warning, TEXT("Nao Session not connected"));
+		return;
+	}
+
+	try {
+		qi::AnyObject tts = session->service("ALMotion");
+		tts.call<void>("stopMove");
+	}
+	catch (std::exception& e) {
+		UE_LOG(LogTemp, Warning, TEXT("QI Exception: %s"), ANSI_TO_TCHAR(e.what()));
+	}
 }
 
 
