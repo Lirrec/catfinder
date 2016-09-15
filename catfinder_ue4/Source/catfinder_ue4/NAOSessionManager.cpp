@@ -2,11 +2,10 @@
 
 #include "catfinder_ue4.h"
 #include <map>
+#include <qi/session.hpp>
 #include "NAOSessionManager.h"
 
 NAOSessionManager* NAOSessionManager::_instance = nullptr;
-
-TMap<FString, UNAOSession*> sessionMap;
 
 NAOSessionManager::NAOSessionManager()
 {
@@ -30,14 +29,18 @@ UNAOSession* NAOSessionManager::getSession(FString ip) {
 	if (!sessionMap.Contains(ip)) {
 		
 		auto session = NewObject<UNAOSession>();
-		
+		session->AddToRoot();
 		session->connect(ip);
 
-		if (session->getState() != ENAOIState::connected)
-			return nullptr;
+		//if (session->getState() != ENAOIState::connected)
+		//	return nullptr;
 		
 		sessionMap.Add(ip,session);
 	}
 	return sessionMap[ip];
 	//return NULL;
+}
+
+void NAOSessionManager::reset() {
+	sessionMap.Reset();
 }

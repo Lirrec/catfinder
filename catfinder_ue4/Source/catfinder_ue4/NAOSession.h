@@ -4,6 +4,8 @@
 
 #include <array>
 #include <memory>
+#include <list>
+#include <qi/future.hpp>
 #include "NaoData.h"
 #include "NAOSession.generated.h"
 
@@ -57,6 +59,11 @@ public:
 		int getALMemoryInt(FString key);
 
 private:
+
+	bool isConnected();
+	void updateAsyncResults();
+
+
 	ENAOIState State = ENAOIState::disconnected;
 
 	UPROPERTY()
@@ -64,4 +71,7 @@ private:
 	
 	FString naoIp;
 	std::shared_ptr<qi::Session> session;
+
+	std::list<qi::Future<void>> AsyncCalls;
+	qi::Future<void> connectionFuture;
 };

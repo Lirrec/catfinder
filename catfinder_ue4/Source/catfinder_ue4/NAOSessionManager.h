@@ -17,4 +17,8 @@ private:
 public:
 	static NAOSessionManager* instance();
 	UNAOSession* getSession(FString ip);
+	// clean up all Sessions, should be called on gameplay end
+	void reset();
+
+	TMap<FString, UNAOSession*> sessionMap;
 };

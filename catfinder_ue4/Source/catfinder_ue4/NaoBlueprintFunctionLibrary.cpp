@@ -15,3 +15,7 @@ UNAOSession* UNaoBlueprintFunctionLibrary::getNaoInterface(FString ipAddress) {
 void UNaoBlueprintFunctionLibrary::initializeNAOInterfaces() {
 	NAOSessionManager::instance()->getSession(TEXT("192.168.1.13"));
 }
+
+void UNaoBlueprintFunctionLibrary::shutdownNAOInterfaces() {
+	NAOSessionManager::instance()->reset();
+}

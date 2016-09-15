@@ -24,4 +24,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "NAO")
 		static void initializeNAOInterfaces();
 
+	UFUNCTION(BlueprintCallable, Category = "NAO")
+		static void shutdownNAOInterfaces();
 };
