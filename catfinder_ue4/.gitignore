@@ -46,6 +46,7 @@ SourceArt/**/*.tga
 
 # Binary Files
 Binaries/*
+!Binaries/Win64/Win64.7z
 
 # Builds
 Build/*
@@ -61,3 +62,7 @@ Intermediate/*
 
 # Cache files for the editor to use
 DerivedDataCache/*
+
+# ThirdParty Libs
+ThirdParty/*
+!ThirdParty/x64.7z
