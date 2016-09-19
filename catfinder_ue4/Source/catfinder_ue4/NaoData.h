@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "NAOConstants.h"
 #include "NAOData.generated.h"
 
 class UNAOSession;
@@ -16,6 +17,10 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="NAO Data")
 	int getTemperature(FString device) const;
+
+	UFUNCTION(BlueprintCallable, Category = "NAO Data")
+	const TArray<int32> getTemperatures() const;
+	
 
 	UPROPERTY(BlueprintReadOnly)
 	int ping;
@@ -34,5 +39,5 @@ public:
 
 private:
 	friend class UNAOSession;
-	TMap<FString, int32> Temperatures;
+	TMap<FString, int32> temperatures;
 };

@@ -149,38 +149,6 @@ void UNAOSession::updateData() {
 	getTemperatures();
 }
 
-std::vector<std::string> sensorNames = {
-	"HeadPitch",
-	"Head",
-	"RWristYaw",
-	"RShoulderRoll",
-	"Battery",
-	"LAnkleRoll",
-	"RHipPitch",
-	"RAnklePitch",
-	"LHipPitch",
-	"RKneePitch",
-	"LHipYawPitch",
-	"LHipRoll",
-	"RHipRoll",
-	"RShoulderPitch",
-	"LHand",
-	"LAnklePitch",
-	"RElbowRoll",
-	"RElbowYaw",
-	"RHand",
-	"RHipYawPitch",
-	"LWristYaw",
-	"LElbowRoll",
-	"LShoulderPitch",
-	"LElbowYaw",
-	"HeadYaw",
-	"LKneePitch",
-	"LShoulderRoll",
-	"RAnkleRoll"
-
-};
-
 void UNAOSession::getTemperatures() {
 	if (temperatureResult.isValid()) {
 
@@ -192,14 +160,16 @@ void UNAOSession::getTemperatures() {
 		}
 
 		UNAOData* data = getData();
-		data.temperatures.Reset();
+		
+		if (!data) return;
+		data->temperatures.Reset();
 		
 
 		std::vector<int> temps = temperatureResult.value();
 
 		int idx = 0;
 		for (int temp : temps) {
-			data.temperatures[ANSI_TO_TCHAR(sensorNames[idx++].c_str())] = temp;
+			data->temperatures[ANSI_TO_TCHAR(sensorNames[idx++].c_str())] = temp;
 			UE_LOG(LogTemp, Warning, TEXT("Temp: %s %i"), ANSI_TO_TCHAR(sensorNames[idx++].c_str()), temp);
 		}
 	}
@@ -208,7 +178,7 @@ void UNAOSession::getTemperatures() {
 		temperatureSensorNames.reserve(sensorNames.size());
 
 		for (const auto& joint : sensorNames) {
-			temperatureSensorNames.push_back("Device/SubDeviceList/" + joint + "/Temperature/Sensor/Value")
+			temperatureSensorNames.push_back("Device/SubDeviceList/" + joint + "/Temperature/Sensor/Value");
 		}
 
 		// no valid future, check if we should start the next call

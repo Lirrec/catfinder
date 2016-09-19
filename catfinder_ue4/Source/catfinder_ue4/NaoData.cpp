@@ -5,6 +5,14 @@
 
 
 int UNAOData::getTemperature(FString device) const {
-	if (Temperatures.Contains(device)) return Temperatures[device];
+	if (temperatures.Contains(device)) return temperatures[device];
 	return -1;
+}
+
+const TArray<int32> UNAOData::getTemperatures() const {
+	TArray<int32> re;
+	for (auto& Elem : temperatures) {
+		re.Add(Elem.Value);
+	}
+	return re;
 }
