@@ -22,7 +22,7 @@ NAOSessionManager* NAOSessionManager::instance() {
 	return NAOSessionManager::_instance;
 }
 
-/** Returns a shared_ptr to a NaoSession which is succesfully connected to a provided IP.
+/** Returns a shared_ptr to a NAOSession which is succesfully connected to a provided IP.
 	Returns NULL if there's an error during the connecting process.
 */
 UNAOSession* NAOSessionManager::getSession(FString ip) {

@@ -4,8 +4,10 @@
 
 #include "NAOData.generated.h"
 
+class UNAOSession;
+
 UCLASS()
-class CATFINDER_UE4_API UNaoData : public UObject
+class CATFINDER_UE4_API UNAOData : public UObject
 {
 
 	GENERATED_BODY()
@@ -31,5 +33,6 @@ public:
 	int cpuLoad;
 
 private:
+	friend class UNAOSession;
 	TMap<FString, int32> Temperatures;
 };

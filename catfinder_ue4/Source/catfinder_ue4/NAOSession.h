@@ -6,7 +6,7 @@
 #include <memory>
 #include <list>
 #include <qi/future.hpp>
-#include "NaoData.h"
+#include "NAOData.h"
 #include "NAOSession.generated.h"
 
 
@@ -29,17 +29,17 @@ class CATFINDER_UE4_API UNAOSession : public UObject
 public:
 	UNAOSession();
 
-	UFUNCTION(BluePrintCallable, Category = "NaoInterface")
+	UFUNCTION(BluePrintCallable, Category = "NAOInterface")
 	ENAOIState getState();
 	
-	UFUNCTION(BluePrintCallable, Category = "NaoInterface")
-	void connect(FString naoIP);
+	UFUNCTION(BluePrintCallable, Category = "NAOInterface")
+	void connect(FString NAOIP);
 
-	UFUNCTION(BluePrintCallable, Category = "NaoInterface")
+	UFUNCTION(BluePrintCallable, Category = "NAOInterface")
 	void disconnect();
 	
-	UFUNCTION(BluePrintCallable, Category = "NaoInterface")
-	UNaoData* getData();
+	UFUNCTION(BluePrintCallable, Category = "NAOInterface")
+	UNAOData* getData();
 
 
 	UFUNCTION(BlueprintCallable, Category = "NAO")
@@ -64,6 +64,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "NAO")
 		int getALMemoryInt(FString key);
 
+	UFUNCTION(BlueprintCallable, Category = "NAO")
+		void updateData();
+
 private:
 
 	bool isConnected();
@@ -73,11 +76,17 @@ private:
 	ENAOIState State = ENAOIState::disconnected;
 
 	UPROPERTY()
-	TArray<UNaoData*> Data;
+	TArray<UNAOData*> Data;
 	
-	FString naoIp;
+	FString NAOIp;
 	std::shared_ptr<qi::Session> session;
 
 	std::list<qi::Future<void>> AsyncCalls;
 	qi::Future<void> connectionFuture;
+
+	float lastUpdate;
+	float updateDelay;
+
+	void getTemperatures();
+	qi::Future<std::vector<int>> temperatureResult;
 };

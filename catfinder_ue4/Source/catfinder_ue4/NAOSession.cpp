@@ -4,6 +4,7 @@
 
 #include <qi/session.hpp>
 
+#include "NAOData.h"
 #include "NAOSession.h"
 
 UNAOSession::UNAOSession() {
@@ -18,8 +19,8 @@ template <class... Ts>
 void callServiceVoidAsync(std::shared_ptr<qi::Session>& session, std::list<qi::Future<void>>& AsyncCalls, const std::string& serviceName, const std::string& operation, Ts&&... args)
 {
 	try {
-		qi::AnyObject tts = session->service(serviceName);
-		qi::Future<void> f = tts.async<void>(operation, args...);
+		qi::AnyObject service = session->service(serviceName);
+		qi::Future<void> f = service.async<void>(operation, args...);
 		AsyncCalls.push_back(f);
 	}
 	catch (std::exception& e) {
@@ -27,17 +28,17 @@ void callServiceVoidAsync(std::shared_ptr<qi::Session>& session, std::list<qi::F
 	}
 }
 
-void UNAOSession::connect(FString naoIP) {
+void UNAOSession::connect(FString NAOIP) {
 	session.reset(new qi::Session);
 	State = ENAOIState::connecting;
-	connectionFuture = session->connect(TCHAR_TO_UTF8(*naoIP));
+	connectionFuture = session->connect(TCHAR_TO_UTF8(*NAOIP));
 
-	UE_LOG(LogTemp, Warning, TEXT("NaoSession connecting to %s"), *naoIP);
+	UE_LOG(LogTemp, Warning, TEXT("NAOSession connecting to %s"), *NAOIP);
 	State = ENAOIState::connecting;
 }
 
 void UNAOSession::disconnect() {
-	UE_LOG(LogTemp, Warning, TEXT("NaoSession disconnecting from %s"), ANSI_TO_TCHAR(session->url().str().c_str()));
+	UE_LOG(LogTemp, Warning, TEXT("NAOSession disconnecting from %s"), ANSI_TO_TCHAR(session->url().str().c_str()));
 	session->close();
 	State = ENAOIState::disconnected;
 }
@@ -46,24 +47,24 @@ bool UNAOSession::isConnected() {
 	if (session && State == ENAOIState::connecting) {
 		if (connectionFuture.isFinished()) {
 			if (connectionFuture.hasError()) {
-				UE_LOG(LogTemp, Error, TEXT("NaoSession failed to connect: '%s'"), ANSI_TO_TCHAR(connectionFuture.error().c_str()));
+				UE_LOG(LogTemp, Error, TEXT("NAOSession failed to connect: '%s'"), ANSI_TO_TCHAR(connectionFuture.error().c_str()));
 				State = ENAOIState::disconnected;
 				return false;
 			}
 			else {
-				UE_LOG(LogTemp, Warning, TEXT("NaoSession successfully connected: '%s'"), ANSI_TO_TCHAR(session->url().str().c_str()));
+				UE_LOG(LogTemp, Warning, TEXT("NAOSession successfully connected: '%s'"), ANSI_TO_TCHAR(session->url().str().c_str()));
 				State = ENAOIState::connected;
 				updateAsyncResults();
 				return true;
 			}
 		}
 
-		UE_LOG(LogTemp, Warning, TEXT("Nao Session still connecting"));
+		UE_LOG(LogTemp, Warning, TEXT("NAO Session still connecting"));
 		return false;
 	}
 
 	if (!session || !session->isConnected() ) {
-		UE_LOG(LogTemp, Warning, TEXT("Nao Session not connected"));
+		UE_LOG(LogTemp, Warning, TEXT("NAO Session not connected"));
 		State = ENAOIState::disconnected;
 		return false;
 	}
@@ -77,7 +78,7 @@ void UNAOSession::updateAsyncResults() {
 	for (auto& f : AsyncCalls) {
 		if (f.isFinished()) {
 			if (f.hasError()) {
-				UE_LOG(LogTemp, Error, TEXT("Error on async nao calls: '%s'"), ANSI_TO_TCHAR(f.error().c_str()));
+				UE_LOG(LogTemp, Error, TEXT("Error on async NAO calls: '%s'"), ANSI_TO_TCHAR(f.error().c_str()));
 				return;
 			}
 			else {
@@ -88,8 +89,8 @@ void UNAOSession::updateAsyncResults() {
 	}
 }
 
-UNaoData* UNAOSession::getData() {
-	if (Data.Num() == 0) Data.Push(NewObject<UNaoData>());
+UNAOData* UNAOSession::getData() {
+	if (Data.Num() == 0) Data.Push(NewObject<UNAOData>());
 	return Data.Top();
 }
 
@@ -128,12 +129,96 @@ int UNAOSession::getALMemoryInt(FString key) {
 	if (isConnected()) return -1;
 
 	try {
-		qi::AnyObject tts = session->service("ALMemory");
+		qi::AnyObject alm = session->service("ALMemory");
 
-		return tts.call<int>("getData", TCHAR_TO_UTF8(*key));
+		return alm.call<int>("getData", TCHAR_TO_UTF8(*key));
 	}
 	catch (const std::exception& e) {
 		UE_LOG(LogTemp, Warning, TEXT("std Exception: %s"), ANSI_TO_TCHAR(e.what()));
 		return -1;
+	}
+}
+
+void UNAOSession::updateData() {
+	/*UWorld* const world = GetWorld();
+	if (world) {
+		if (lastUpdate + updateDelay < world->RealTimeSeconds) {
+			
+		}
+	}*/
+	getTemperatures();
+}
+
+std::vector<std::string> sensorNames = {
+	"HeadPitch",
+	"Head",
+	"RWristYaw",
+	"RShoulderRoll",
+	"Battery",
+	"LAnkleRoll",
+	"RHipPitch",
+	"RAnklePitch",
+	"LHipPitch",
+	"RKneePitch",
+	"LHipYawPitch",
+	"LHipRoll",
+	"RHipRoll",
+	"RShoulderPitch",
+	"LHand",
+	"LAnklePitch",
+	"RElbowRoll",
+	"RElbowYaw",
+	"RHand",
+	"RHipYawPitch",
+	"LWristYaw",
+	"LElbowRoll",
+	"LShoulderPitch",
+	"LElbowYaw",
+	"HeadYaw",
+	"LKneePitch",
+	"LShoulderRoll",
+	"RAnkleRoll"
+
+};
+
+void UNAOSession::getTemperatures() {
+	if (temperatureResult.isValid()) {
+
+		if (!temperatureResult.isFinished()) return;
+
+		if (temperatureResult.hasError()) {
+			UE_LOG(LogTemp, Warning, TEXT("QI Future Error: %s"), ANSI_TO_TCHAR(temperatureResult.error().c_str()));
+			return;
+		}
+
+		UNAOData* data = getData();
+		data.temperatures.Reset();
+		
+
+		std::vector<int> temps = temperatureResult.value();
+
+		int idx = 0;
+		for (int temp : temps) {
+			data.temperatures[ANSI_TO_TCHAR(sensorNames[idx++].c_str())] = temp;
+			UE_LOG(LogTemp, Warning, TEXT("Temp: %s %i"), ANSI_TO_TCHAR(sensorNames[idx++].c_str()), temp);
+		}
+	}
+	else {
+		std::vector<std::string> temperatureSensorNames;
+		temperatureSensorNames.reserve(sensorNames.size());
+
+		for (const auto& joint : sensorNames) {
+			temperatureSensorNames.push_back("Device/SubDeviceList/" + joint + "/Temperature/Sensor/Value")
+		}
+
+		// no valid future, check if we should start the next call
+		// TODO: actually check based on some Timer
+		try {
+			qi::AnyObject tts = session->service("ALMemory");
+			temperatureResult = tts.async<std::vector<int>>("getListData", temperatureSensorNames);
+		}
+		catch (std::exception& e) {
+			UE_LOG(LogTemp, Warning, TEXT("QI Exception: %s"), ANSI_TO_TCHAR(e.what()));
+		}
 	}
 }

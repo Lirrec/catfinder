@@ -3,23 +3,23 @@
 #pragma once
 
 #include "Kismet/BlueprintFunctionLibrary.h"
-#include "NaoBlueprintFunctionLibrary.generated.h"
+#include "NAOBlueprintFunctionLibrary.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class CATFINDER_UE4_API UNaoBlueprintFunctionLibrary : public UBlueprintFunctionLibrary
+class CATFINDER_UE4_API UNAOBlueprintFunctionLibrary : public UBlueprintFunctionLibrary
 {
 	GENERATED_BODY()
 	
 public:
 	/*UPROPERTY(BlueprintReadWrite, Category = "NAO")
-	static FString naoIP = TEXT("192.168.1.13");
+	static FString NAOIP = TEXT("192.168.1.13");
 	*/
 
 	UFUNCTION(BlueprintCallable, Category = "NAO")
-		static UNAOSession* getNaoInterface(FString ipAddress);
+		static UNAOSession* getNAOInterface(FString ipAddress);
 
 	UFUNCTION(BlueprintCallable, Category = "NAO")
 		static void initializeNAOInterfaces();

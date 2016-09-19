@@ -1,21 +1,22 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "catfinder_ue4.h"
-#include "NaoBlueprintFunctionLibrary.h"
+#include "NAOBlueprintFunctionLibrary.h"
 
 #include <qi/session.hpp>
 #include <qi/future.hpp>
 #include "NAOSessionManager.h"
 
 
-UNAOSession* UNaoBlueprintFunctionLibrary::getNaoInterface(FString ipAddress) {
+UNAOSession* UNAOBlueprintFunctionLibrary::getNAOInterface(FString ipAddress) {
 	return NAOSessionManager::instance()->getSession(ipAddress);
 }
 
-void UNaoBlueprintFunctionLibrary::initializeNAOInterfaces() {
-	NAOSessionManager::instance()->getSession(TEXT("192.168.1.13"));
+void UNAOBlueprintFunctionLibrary::initializeNAOInterfaces() {
+	//NAOSessionManager::instance()->getSession(TEXT("192.168.1.13"));
+	NAOSessionManager::instance()->getSession(TEXT("10.215.255.187"));
 }
 
-void UNaoBlueprintFunctionLibrary::shutdownNAOInterfaces() {
+void UNAOBlueprintFunctionLibrary::shutdownNAOInterfaces() {
 	NAOSessionManager::instance()->reset();
 }
