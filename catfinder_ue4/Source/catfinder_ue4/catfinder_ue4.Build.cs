@@ -26,7 +26,7 @@ public class catfinder_ue4 : ModuleRules
         ThirdPartyPath = Path.Combine(ThirdPartyPath, (Target.Platform == UnrealTargetPlatform.Win64) ? "x64" : "x86");
 
         PublicLibraryPaths.Add(Path.Combine(ThirdPartyPath, "libqi", "lib"));
-        PublicLibraryPaths.Add(Path.Combine(ThirdPartyPath, "boost_1_61_0_x64", "lib"));
+        PublicLibraryPaths.Add(Path.Combine(ThirdPartyPath, "boost_1_61_0_x64", "lib64-msvc-14.0"));
         PublicLibraryPaths.Add(Path.Combine(ThirdPartyPath, "openssl-1.0.1t-vs2015", "lib"));
 
         if (Target.Configuration != UnrealTargetConfiguration.DebugGame)
