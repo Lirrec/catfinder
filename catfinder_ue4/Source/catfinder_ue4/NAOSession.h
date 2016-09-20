@@ -7,6 +7,7 @@
 #include <list>
 #include <qi/future.hpp>
 #include "NAOData.h"
+#include "NAOConstants.h"
 #include "NAOSession.generated.h"
 
 
@@ -29,49 +30,52 @@ class CATFINDER_UE4_API UNAOSession : public UObject
 public:
 	UNAOSession();
 
-	UFUNCTION(BluePrintCallable, Category = "NAOInterface")
+	UFUNCTION(BluePrintCallable, Category = UE_NAO_INTERFACE_CATEGORY)
 	ENAOIState getState();
 	
-	UFUNCTION(BluePrintCallable, Category = "NAOInterface")
+	UFUNCTION(BluePrintCallable, Category = UE_NAO_INTERFACE_CATEGORY)
 	void connect(FString NAOIP);
 
-	UFUNCTION(BluePrintCallable, Category = "NAOInterface")
+	UFUNCTION(BluePrintCallable, Category = UE_NAO_INTERFACE_CATEGORY)
 	void disconnect();
 	
-	UFUNCTION(BluePrintCallable, Category = "NAOInterface")
+	UFUNCTION(BluePrintCallable, Category = UE_NAO_INTERFACE_CATEGORY)
 	UNAOData* getData();
 
 
-	UFUNCTION(BlueprintCallable, Category = "NAO")
+	UFUNCTION(BlueprintCallable, Category = UE_NAO_CATEGORY)
 		void text2SpeechSay(FString message = TEXT("Test!"));
 
-	UFUNCTION(BlueprintCallable, Category = "NAO")
+	UFUNCTION(BlueprintCallable, Category = UE_NAO_CATEGORY)
 		void angleInterpolation(FString targetJoint, float degrees, float time, bool isAbsolute = true);
 
-	UFUNCTION(BlueprintCallable, Category = "NAO")
+	UFUNCTION(BlueprintCallable, Category = UE_NAO_CATEGORY)
 		int getTemperature(FString deviceName);
 
 	//Should look at moveToward, comments say its whats supposed to be used w/ joysticks etc.
-	UFUNCTION(BlueprintCallable, Category = "NAO")
+	UFUNCTION(BlueprintCallable, Category = UE_NAO_CATEGORY)
 		void moveTo(float xDistanceInMeters, float yDistacneInMeters, float thetaInRadians);
 
-	UFUNCTION(BlueprintCallable, Category = "NAO")
+	UFUNCTION(BlueprintCallable, Category = UE_NAO_CATEGORY)
 		void moveToward(float xSpeedRelative, float ySpeedRelative, float thetaSpeedRelative);
 
-	UFUNCTION(BlueprintCallable, Category = "NAO")
+	UFUNCTION(BlueprintCallable, Category = UE_NAO_CATEGORY)
 		void stopMove();
 
-	UFUNCTION(BlueprintCallable, Category = "NAO")
+	UFUNCTION(BlueprintCallable, Category = UE_NAO_CATEGORY)
 		int getALMemoryInt(FString key);
 
-	UFUNCTION(BlueprintCallable, Category = "NAO")
+	UFUNCTION(BlueprintCallable, Category = UE_NAO_CATEGORY)
 		void updateData();
+
+	UFUNCTION(BlueprintCallable, Category = UE_NAO_CATEGORY)
+		void createCallbackTest(FString eventName);
 
 private:
 
 	bool isConnected();
 	void updateAsyncResults();
-
+	void callbackFunction();
 
 	ENAOIState State = ENAOIState::disconnected;
 
