@@ -47,6 +47,7 @@ SourceArt/**/*.tga
 # Binary Files
 Binaries/*
 !Binaries/Win64/Win64.7z
+!Binaries/Win64/qi_bin.7z
 
 # Builds
 Build/*

@@ -24,17 +24,30 @@ void callServiceVoidAsync(std::shared_ptr<qi::Session>& session, std::list<qi::F
 		AsyncCalls.push_back(f);
 	}
 	catch (std::exception& e) {
-		UE_LOG(LogTemp, Warning, TEXT("QI Exception: %s"), ANSI_TO_TCHAR(e.what()));
+		UE_LOG(LogTemp, Warning, TEXT("callService: Exception: %s"), ANSI_TO_TCHAR(e.what()));
+
 	}
 }
 
 void UNAOSession::connect(FString NAOIP) {
-	session.reset(new qi::Session);
-	State = ENAOIState::connecting;
-	connectionFuture = session->connect(TCHAR_TO_UTF8(*NAOIP));
 
-	UE_LOG(LogTemp, Warning, TEXT("NAOSession connecting to %s"), *NAOIP);
-	State = ENAOIState::connecting;
+	try {
+		session.reset(new qi::Session);
+		State = ENAOIState::connecting;
+		connectionFuture = session->connect(TCHAR_TO_UTF8(*NAOIP));
+
+
+		UE_LOG(LogTemp, Warning, TEXT("NAOSession connecting to %s"), *NAOIP);
+		State = ENAOIState::connecting;
+	}
+	catch (const std::exception& e) {
+		UE_LOG(LogTemp, Warning, TEXT("Exception while connecting: %s"), ANSI_TO_TCHAR(e.what()));
+		State = ENAOIState::disconnected;
+		return;
+	}
+
+
+
 }
 
 void UNAOSession::disconnect() {
@@ -79,12 +92,11 @@ void UNAOSession::updateAsyncResults() {
 		if (f.isFinished()) {
 			if (f.hasError()) {
 				UE_LOG(LogTemp, Error, TEXT("Error on async NAO calls: '%s'"), ANSI_TO_TCHAR(f.error().c_str()));
-				return;
 			}
 			else {
 				UE_LOG(LogTemp, Warning, TEXT("Successful async call."));
-				return;
 			}
+			f = qi::Future<void>();
 		}
 	}
 }
@@ -146,7 +158,8 @@ void UNAOSession::updateData() {
 			
 		}
 	}*/
-	getTemperatures();
+	if (!isConnected()) return;
+	//getTemperatures();
 }
 
 void UNAOSession::getTemperatures() {
@@ -169,11 +182,15 @@ void UNAOSession::getTemperatures() {
 
 		int idx = 0;
 		for (int temp : temps) {
-			data->temperatures[ANSI_TO_TCHAR(sensorNames[idx++].c_str())] = temp;
-			UE_LOG(LogTemp, Warning, TEXT("Temp: %s %i"), ANSI_TO_TCHAR(sensorNames[idx++].c_str()), temp);
+			data->temperatures.Add(ANSI_TO_TCHAR(sensorNames[idx++].c_str()), temp);
+			//UE_LOG(LogTemp, Warning, TEXT("Temp: %s %i"), ANSI_TO_TCHAR(sensorNames[idx++].c_str()), temp);
 		}
+
+		if (idx > 0)
+			UE_LOG(LogTemp, Warning, TEXT("Received new %i temperatures"), idx);
 	}
 	else {
+		if (!isConnected()) return;
 		std::vector<std::string> temperatureSensorNames;
 		temperatureSensorNames.reserve(sensorNames.size());
 
@@ -192,6 +209,7 @@ void UNAOSession::getTemperatures() {
 		}
 	}
 }
+
 void UNAOSession::createCallbackTest(FString eventName) {
 	if (!isConnected()) return;
 	callServiceVoidAsync(session, AsyncCalls, "ALMemory", "subscriber", TCHAR_TO_UTF8(*eventName));

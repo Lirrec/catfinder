@@ -29,9 +29,9 @@ public class catfinder_ue4 : ModuleRules
         PublicLibraryPaths.Add(Path.Combine(ThirdPartyPath, "boost_1_61_0_x64", "lib64-msvc-14.0"));
         PublicLibraryPaths.Add(Path.Combine(ThirdPartyPath, "openssl-1.0.1t-vs2015", "lib"));
 
-        if (Target.Configuration != UnrealTargetConfiguration.DebugGame)
+        if (Target.Configuration == UnrealTargetConfiguration.DebugGame)
         {
-            PublicAdditionalLibraries.Add("qi.lib");
+            PublicAdditionalLibraries.Add("qi_d.lib");
         } else {
             PublicAdditionalLibraries.Add("qi.lib");
         }

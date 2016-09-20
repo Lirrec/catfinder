@@ -56,3 +56,9 @@
 13.9.2016		
 		Chemnitz: Dr. John Nassour -> Nao guru
 		libqi: Vorsicht bei Funktionen die ein qi::FutureSync<T> zurückgeben. das FutureSync wirft ne exception im destructor die man nicht fangen kann. Deshalb muss das von einer Funktion zurückgegebene FutureSync unbedingt in ein qi::future gespeichert werden. Dann kann man mit wait() und danach hasError() / error() die Fehler behandeln.
+14.9.2016
+		SessionManager eingebaut und mit neues Nao Interface eingeführt, welches die sessions cached und Zugriff auf mehrere Naos in einer Anwendung erleichtert
+15.9.2016
+		WLAN für Naos bekommen.
+		Neue Klimakacheln eingebaut.
+		Streamscript angefangen.
