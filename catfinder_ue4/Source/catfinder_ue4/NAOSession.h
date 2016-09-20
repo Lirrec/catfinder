@@ -6,6 +6,7 @@
 #include <memory>
 #include <list>
 #include <qi/future.hpp>
+#include <qi/signal.hpp>
 #include "NAOData.h"
 #include "NAOConstants.h"
 #include "NAOSession.generated.h"
@@ -68,6 +69,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = UE_NAO_CATEGORY)
 		void updateData();
 
+	//creates a callback for testing purposes, triggers when the naos chestbutton is pressed
 	UFUNCTION(BlueprintCallable, Category = UE_NAO_CATEGORY)
 		void createCallbackTest(FString eventName);
 
@@ -75,7 +77,6 @@ private:
 
 	bool isConnected();
 	void updateAsyncResults();
-	void callbackFunction();
 
 	ENAOIState State = ENAOIState::disconnected;
 
@@ -92,5 +93,10 @@ private:
 	float updateDelay;
 
 	void getTemperatures();
+	void getTestEvent();
+	//simple callback, writing message to UE-Logs when called
+	qi::AnyReference testCallback();
+
 	qi::Future<std::vector<int>> temperatureResult;
+	qi::Future<qi::SignalLink> futLink;
 };
