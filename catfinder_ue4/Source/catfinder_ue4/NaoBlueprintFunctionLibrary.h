@@ -2,8 +2,10 @@
 
 #pragma once
 
+#include "NAOConstants.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "NAOBlueprintFunctionLibrary.generated.h"
+
 
 /**
  * 
@@ -18,12 +20,12 @@ public:
 	static FString NAOIP = TEXT("192.168.1.13");
 	*/
 
-	UFUNCTION(BlueprintCallable, Category = "NAO")
+	UFUNCTION(BlueprintCallable, Category = UE_NAO_CATEGORY)
 		static UNAOSession* getNAOInterface(FString ipAddress);
 
-	UFUNCTION(BlueprintCallable, Category = "NAO")
+	UFUNCTION(BlueprintCallable, Category = UE_NAO_CATEGORY)
 		static void initializeNAOInterfaces();
 
-	UFUNCTION(BlueprintCallable, Category = "NAO")
+	UFUNCTION(BlueprintCallable, Category = UE_NAO_CATEGORY)
 		static void shutdownNAOInterfaces();
 };

@@ -15,10 +15,10 @@ class CATFINDER_UE4_API UNAOData : public UObject
 
 public:
 
-	UFUNCTION(BlueprintCallable, Category="NAO Data")
+	UFUNCTION(BlueprintCallable, Category = UE_NAO_DATA_CATEGORY)
 	int getTemperature(FString device) const;
 
-	UFUNCTION(BlueprintCallable, Category = "NAO Data")
+	UFUNCTION(BlueprintCallable, Category = UE_NAO_DATA_CATEGORY)
 	const TArray<int32> getTemperatures() const;
 	
 

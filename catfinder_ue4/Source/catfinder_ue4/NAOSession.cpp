@@ -192,3 +192,8 @@ void UNAOSession::getTemperatures() {
 		}
 	}
 }
+void UNAOSession::createCallbackTest(FString eventName) {
+	if (!isConnected()) return;
+	callServiceVoidAsync(session, AsyncCalls, "ALMemory", "subscriber", TCHAR_TO_UTF8(*eventName));
+
+}
