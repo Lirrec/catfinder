@@ -7,13 +7,15 @@
 #include <list>
 #include <qi/future.hpp>
 #include <qi/signal.hpp>
+#include <qi/AnyObject.hpp>
+#include <qi/session.hpp>
 #include "NAOData.h"
 #include "NAOConstants.h"
 #include "NAOSession.generated.h"
 
 
 namespace qi {
-	class Session;
+	//class Session;
 }
 
 UENUM(BlueprintType)
@@ -95,8 +97,12 @@ private:
 	void getTemperatures();
 	void getTestEvent();
 	//simple callback, writing message to UE-Logs when called
-	qi::AnyReference testCallback();
-
+	//void testCallback();
+	qi::AnyReference testCallback(const std::vector<qi::AnyReference>& params);
+	qi::AnyObject callbackBuffer;
 	qi::Future<std::vector<int>> temperatureResult;
-	qi::Future<qi::SignalLink> futLink;
+	qi::Future<qi::SignalLink> f;
+	qi::SignalSubscriber sigSub;
+
+	//qi::AnyObject futLink;
 };

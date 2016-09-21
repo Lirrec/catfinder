@@ -4,6 +4,7 @@
 
 #include <qi/session.hpp>
 
+
 #include "NAOData.h"
 #include "NAOSession.h"
 
@@ -214,21 +215,16 @@ void UNAOSession::getTemperatures() {
 
 //creates a callback for testing purposes, triggers when the naos chestbutton is pressed
 void UNAOSession::createCallbackTest(FString eventName) {
-/*	try {
-		qi::AnyObject tts = session->service("ALMemory");
-		temperatureResult = tts.async<std::vector<int>>("getListData", temperatureSensorNames);
-	}
-	catch (std::exception& e) {
-		UE_LOG(LogTemp, Warning, TEXT("QI Exception: %s"), ANSI_TO_TCHAR(e.what()));
-	}*/
-	//testLink = testSignal.connect(&UNAOSession::testCallback, this);
-	//futLink = _service.connect("ALChestButton/SimpleClickOccurred", sigSub);
-	
 	try {
-		qi::SignalSubscriber sigSub(qi::AnyFunction::fromDynamicFunction(boost::bind(&UNAOSession::testCallback, this)));
-		qi::AnyObject tts = session->service("ALChestButton");
-		//qi::Future<qi::SignalLink> f = tts.async<qi::SignalLink>("ALChestButton/SimpleClickOccurred", sigSub);
-		futLink = tts.connect("SimpleClickOccurred", sigSub);
+		sigSub = qi::SignalSubscriber(qi::AnyFunction::fromDynamicFunction(boost::bind(&UNAOSession::testCallback, this, _1)));
+		qi::AnyObject alm = session->service("ALMemory");
+		callbackBuffer = alm.call<qi::AnyObject>("subscriber", "*");
+		f = callbackBuffer.connect("signal", sigSub);
+		f.wait();
+		if (f.hasError()) {
+			UE_LOG(LogTemp, Error, TEXT("Error on signal connect: '%s'"), ANSI_TO_TCHAR(f.error().c_str()));
+		}
+		UE_LOG(LogTemp, Error, TEXT("signal connected"));
 	}
 	catch (std::exception& e) {
 		UE_LOG(LogTemp, Warning, TEXT("QI Exception: %s"), ANSI_TO_TCHAR(e.what()));
@@ -236,8 +232,8 @@ void UNAOSession::createCallbackTest(FString eventName) {
 }
 
 //simple callback, writing message to UE-Logs when called
-qi::AnyReference UNAOSession::testCallback() {
+qi::AnyReference UNAOSession::testCallback(const std::vector<qi::AnyReference>& params) {
 	UE_LOG(LogTemp, Warning, TEXT("NAOevent: CHESTBUTTON PRESSED"));
 	//returntype needs to be anyreference. this solution was taken form official libqi examples
-	return qi::AnyReference();
+	return qi::AnyReference();// nullptr;
 }
