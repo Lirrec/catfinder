@@ -218,7 +218,7 @@ void UNAOSession::createCallbackTest(FString eventName) {
 	try {
 		sigSub = qi::SignalSubscriber(qi::AnyFunction::fromDynamicFunction(boost::bind(&UNAOSession::testCallback, this, _1)));
 		qi::AnyObject alm = session->service("ALMemory");
-		callbackBuffer = alm.call<qi::AnyObject>("subscriber", "*");
+		callbackBuffer = alm.call<qi::AnyObject>("subscriber", "ChestButtonPressed");
 		f = callbackBuffer.connect("signal", sigSub);
 		f.wait();
 		if (f.hasError()) {
