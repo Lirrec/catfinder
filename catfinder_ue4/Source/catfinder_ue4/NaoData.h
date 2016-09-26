@@ -3,6 +3,7 @@
 #pragma once
 
 #include "NAOConstants.h"
+#include "TemperatureReading.h"
 #include "NAOData.generated.h"
 
 class UNAOSession;
@@ -16,11 +17,10 @@ class CATFINDER_UE4_API UNAOData : public UObject
 public:
 
 	UFUNCTION(BlueprintCallable, Category = UE_NAO_DATA_CATEGORY)
-	int getTemperature(FString device) const;
+	UTemperatureReading* getTemperature(FString device) const;
 
 	UFUNCTION(BlueprintCallable, Category = UE_NAO_DATA_CATEGORY)
-	const TArray<int32> getTemperatures() const;
-	
+	const TArray<UTemperatureReading*>& getTemperatures() const;
 
 	UPROPERTY(BlueprintReadOnly)
 	int ping;
@@ -39,5 +39,10 @@ public:
 
 private:
 	friend class UNAOSession;
-	TMap<FString, int32> temperatures;
+
+	void sortData();
+
+	UPROPERTY()
+	TArray<UTemperatureReading*> TemperatureList;
+
 };

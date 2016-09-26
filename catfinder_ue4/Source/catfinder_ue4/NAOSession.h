@@ -55,7 +55,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = UE_NAO_CATEGORY)
 		int getTemperature(FString deviceName);
 
-	//Should look at moveToward, comments say its whats supposed to be used w/ joysticks etc.
 	UFUNCTION(BlueprintCallable, Category = UE_NAO_CATEGORY)
 		void moveTo(float xDistanceInMeters, float yDistacneInMeters, float thetaInRadians);
 
@@ -71,9 +70,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = UE_NAO_CATEGORY)
 		void updateData();
 
-	//creates a callback for testing purposes, triggers when the naos chestbutton is pressed
+	//Creates a callback for a specified event that will add an entry to a member-List containing the name of the event.
+	//For a full list of possible events, see http://doc.aldebaran.com/2-1/naoqi-eventindex.html
 	UFUNCTION(BlueprintCallable, Category = UE_NAO_CATEGORY)
-		void createCallbackTest(FString eventName);
+		void createCallback(FString eventName = TEXT("ChestButtonPressed"));
 
 private:
 
@@ -85,7 +85,7 @@ private:
 	UPROPERTY()
 	TArray<UNAOData*> Data;
 	
-	FString NAOIp;
+	FString NaoIP;
 	std::shared_ptr<qi::Session> session;
 
 	std::list<qi::Future<void>> AsyncCalls;
@@ -93,16 +93,11 @@ private:
 
 	float lastUpdate;
 	float updateDelay;
-
 	void getTemperatures();
-	void getTestEvent();
-	//simple callback, writing message to UE-Logs when called
-	//void testCallback();
-	qi::AnyReference testCallback(const std::vector<qi::AnyReference>& params);
-	qi::AnyObject callbackBuffer;
 	qi::Future<std::vector<int>> temperatureResult;
-	qi::Future<qi::SignalLink> f;
-	qi::SignalSubscriber sigSub;
 
-	//qi::AnyObject futLink;
+	//simple callback, writing message to UE-Logs and adding the event to a membered list when called
+	qi::AnyReference eventCallback(FString eventName, const std::vector<qi::AnyReference>& params);
+	std::list<qi::AnyObject> subscriberList;
+	std::map<std::string, std::vector<qi::AnyReference>> eventMap;
 };

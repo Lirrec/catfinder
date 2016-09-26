@@ -4,15 +4,19 @@
 #include "NAOData.h"
 
 
-int UNAOData::getTemperature(FString device) const {
-	if (temperatures.Contains(device)) return temperatures[device];
-	return -1;
+UTemperatureReading* UNAOData::getTemperature(FString device) const {
+	for (auto d : TemperatureList) {
+		if (d->Joint.Equals(device)) return d;
+	}
+	return nullptr;
 }
 
-const TArray<int32> UNAOData::getTemperatures() const {
-	TArray<int32> re;
-	for (auto& Elem : temperatures) {
-		re.Add(Elem.Value);
-	}
-	return re;
+const TArray<UTemperatureReading*>& UNAOData::getTemperatures() const {
+	return TemperatureList;
+}
+
+void UNAOData::sortData() {
+	TemperatureList.Sort([](const auto& a, const auto& b) {
+		return a.Temperature > b.Temperature;
+	});
 }
