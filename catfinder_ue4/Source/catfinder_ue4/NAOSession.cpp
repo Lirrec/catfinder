@@ -204,6 +204,8 @@ void UNAOSession::getTemperatures() {
 
 		if (idx > 0)
 			UE_LOG(LogTemp, Warning, TEXT("Received new %i temperatures"), idx);
+
+		temperatureResult = qi::Future<std::vector<int>>(); 
 	}
 	else {
 		if (!isConnected()) return;
