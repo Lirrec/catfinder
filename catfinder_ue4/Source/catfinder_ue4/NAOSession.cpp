@@ -186,14 +186,19 @@ void UNAOSession::getTemperatures() {
 		UNAOData* data = getData();
 		
 		if (!data) return;
-		data->temperatures.Reset();
+		data->TemperatureList.Reset();
 		
 
 		std::vector<int> temps = temperatureResult.value();
 
 		int idx = 0;
 		for (int temp : temps) {
-			data->temperatures.Add(ANSI_TO_TCHAR(sensorNames[idx++].c_str()), temp);
+			
+			UTemperatureReading* reading = NewObject<UTemperatureReading>();
+			reading->Joint = ANSI_TO_TCHAR(sensorNames[idx++].c_str());
+			reading->Temperature = temp;
+			data->TemperatureList.Add(reading);
+			data->sortData();
 			//UE_LOG(LogTemp, Warning, TEXT("Temp: %s %i"), ANSI_TO_TCHAR(sensorNames[idx++].c_str()), temp);
 		}
 
