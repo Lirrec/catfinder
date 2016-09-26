@@ -31,9 +31,9 @@
 		- lib dirs: boost lib dir, openssl lib dir
 		
 	libqicore compilieren
-		cmake -G"Visual Studio 14 2015 Win64" -DQI_WITH_TESTS=OFF -DQI_DIR=E:\catfinder\qideps\libqi-sdk\share\cmake\qi -DOPENSSL_ROOT_DIR=E:\catfinder\qideps\openssl-1.0.1t-vs2015 -DBOOST_ROOT=E:\catfinder\qideps\boost_1_61_0_x64 -Dqimodule_DIR=E:\catfinder\qideps\libqi-sdk\share\cmake\qimodule -DCMAKE_INSTALL_PREFIX=E:\catfinder\libqicore\build\sdk\ ..
+		cmake -G"Visual Studio 14 2015 Win64" -DQI_WITH_TESTS=OFF -DQI_DIR=E:\catfinder\libqi\build\sdk\share\cmake\qi -DOPENSSL_ROOT_DIR=E:\catfinder\qideps\openssl-1.0.1t-vs2015 -DBOOST_ROOT=E:\catfinder\qideps\boost_1_61_0_x64 -Dqimodule_DIR=E:\catfinder\libqi\build\sdk\share\cmake\qimodule -DCMAKE_INSTALL_PREFIX=E:\catfinder\libqicore\build\sdk\ ..
 	libqi/bin compilieren:
-		cmake -DQI_DIR=E:\catfinder\libqi-sdk\share\cmake\qi -DQICORE_DIR=E:\catfinder\libqicore-sdk\share\cmake\qicore\ -DOPENSSL_ROOT_DIR=E:\catfinder\openssl-1.0.1t-vs2015 -DBOOST_ROOT=E:\catfinder\boost_1_61_0 ..
+		cmake -DQI_DIR=E:\catfinder\libqi\build\sdk\share\cmake\qi -DQICORE_DIR=E:\catfinder\libqicore\build\sdk\share\cmake\qicore\ -DOPENSSL_ROOT_DIR=E:\catfinder\qideps\openssl-1.0.1t-vs2015 -DBOOST_ROOT=E:\catfinder\qideps\boost_1_61_0_x64 ..
 		
 1.9.2016 16:00, Aldebaran Robotics stellt fest, dass sie seit zwei Jahren vergessen haben ihre libqicore commits auf github zu pushen...
 5.9.2016 

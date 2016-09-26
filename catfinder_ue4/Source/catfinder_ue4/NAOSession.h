@@ -85,7 +85,7 @@ private:
 	UPROPERTY()
 	TArray<UNAOData*> Data;
 	
-	FString NAOIp;
+	FString NaoIP;
 	std::shared_ptr<qi::Session> session;
 
 	std::list<qi::Future<void>> AsyncCalls;

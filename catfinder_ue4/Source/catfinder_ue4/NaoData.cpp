@@ -16,3 +16,11 @@ const TArray<int32> UNAOData::getTemperatures() const {
 	}
 	return re;
 }
+
+const TArray<FString> UNAOData::getTemperatureJoints() const {
+	TArray<FString> re;
+	for (auto& Elem : temperatures) {
+		re.Add(Elem.Key);
+	}
+	return re;
+}

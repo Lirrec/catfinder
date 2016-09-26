@@ -21,6 +21,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = UE_NAO_DATA_CATEGORY)
 	const TArray<int32> getTemperatures() const;
 	
+	UFUNCTION(BlueprintCallable, Category = UE_NAO_DATA_CATEGORY)
+	const TArray<FString> getTemperatureJoints() const;
 
 	UPROPERTY(BlueprintReadOnly)
 	int ping;

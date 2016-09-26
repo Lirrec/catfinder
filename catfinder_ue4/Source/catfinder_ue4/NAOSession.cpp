@@ -2,6 +2,7 @@
 
 #include "catfinder_ue4.h"
 
+#include <algorithm>
 #include <qi/session.hpp>
 
 
@@ -9,7 +10,7 @@
 #include "NAOSession.h"
 
 UNAOSession::UNAOSession() {
-	
+	AsyncCalls.clear();
 }
 
 ENAOIState UNAOSession::getState() {
@@ -21,12 +22,18 @@ void callServiceVoidAsync(std::shared_ptr<qi::Session>& session, std::list<qi::F
 {
 	try {
 		qi::AnyObject service = session->service(serviceName);
+		
+		//service.call<void>(operation, args...);
 		qi::Future<void> f = service.async<void>(operation, args...);
 		AsyncCalls.push_back(f);
+		
 	}
 	catch (std::exception& e) {
 		UE_LOG(LogTemp, Warning, TEXT("callService: Exception: %s"), ANSI_TO_TCHAR(e.what()));
 
+	}
+	catch (...) {
+		UE_LOG(LogTemp, Warning, TEXT("callService: some other Exception. "));
 	}
 }
 
@@ -35,22 +42,20 @@ void callServiceVoidAsync(std::shared_ptr<qi::Session>& session, std::list<qi::F
 void UNAOSession::connect(FString NAOIP) {
 
 	try {
-		session.reset(new qi::Session);
+		session = std::make_shared<qi::Session>();
 		State = ENAOIState::connecting;
 		connectionFuture = session->connect(TCHAR_TO_UTF8(*NAOIP));
 
 
 		UE_LOG(LogTemp, Warning, TEXT("NAOSession connecting to %s"), *NAOIP);
 		State = ENAOIState::connecting;
+		NaoIP = NAOIP;
 	}
 	catch (const std::exception& e) {
 		UE_LOG(LogTemp, Warning, TEXT("Exception while connecting: %s"), ANSI_TO_TCHAR(e.what()));
 		State = ENAOIState::disconnected;
 		return;
 	}
-
-
-
 }
 
 void UNAOSession::disconnect() {
@@ -99,9 +104,12 @@ void UNAOSession::updateAsyncResults() {
 			else {
 				UE_LOG(LogTemp, Warning, TEXT("Successful async call."));
 			}
-			f = qi::Future<void>();
 		}
 	}
+
+	AsyncCalls.erase(std::remove_if(AsyncCalls.begin(), AsyncCalls.end(), [](const auto& elem) {
+		return elem.isFinished();
+	}), AsyncCalls.end());
 }
 
 UNAOData* UNAOSession::getData() {
@@ -162,7 +170,7 @@ void UNAOSession::updateData() {
 		}
 	}*/
 	if (!isConnected()) return;
-	//getTemperatures();
+	getTemperatures();
 }
 
 void UNAOSession::getTemperatures() {
