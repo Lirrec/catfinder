@@ -20,12 +20,37 @@ public:
 	static FString NAOIP = TEXT("192.168.1.13");
 	*/
 
-	UFUNCTION(BlueprintCallable, Category = UE_NAO_CATEGORY)
+	UFUNCTION(BlueprintCallable, Category = "NAO Interface")
 		static UNAOSession* getNAOInterface(FString ipAddress);
 
-	UFUNCTION(BlueprintCallable, Category = UE_NAO_CATEGORY)
+	UFUNCTION(BlueprintCallable, Category = "NAO Interface")
 		static void initializeNAOInterfaces();
 
-	UFUNCTION(BlueprintCallable, Category = UE_NAO_CATEGORY)
+	UFUNCTION(BlueprintCallable, Category = "NAO Interface")
 		static void shutdownNAOInterfaces();
+
+
+
+	UFUNCTION(BlueprintCallable, Category = "NAO Interface")
+		static void text2SpeechSay(UNAOSession* session, FString message = TEXT("Test!"));
+
+	UFUNCTION(BlueprintCallable, Category = "NAO Interface")
+		static void angleInterpolation(UNAOSession* session, FString targetJoint, float degrees, float time, bool isAbsolute = true);
+
+	UFUNCTION(BlueprintCallable, Category = "NAO Interface")
+		static int getTemperature(UNAOSession* session, FString deviceName);
+
+	UFUNCTION(BlueprintCallable, Category = "NAO Interface")
+		static void moveTo(UNAOSession* session, float xDistanceInMeters, float yDistanceInMeters, float thetaInRadians);
+
+	UFUNCTION(BlueprintCallable, Category = "NAO Interface")
+		static void moveToward(UNAOSession* session, float xSpeedRelative, float ySpeedRelative, float thetaSpeedRelative);
+
+	UFUNCTION(BlueprintCallable, Category = "NAO Interface")
+		static void stopMove(UNAOSession* session);
+
+	UFUNCTION(BlueprintCallable, Category = "NAO Interface")
+		static int getALMemoryInt(UNAOSession* session, FString key);
+
+
 };

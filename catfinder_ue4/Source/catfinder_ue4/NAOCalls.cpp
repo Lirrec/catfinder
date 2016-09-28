@@ -1,0 +1,72 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+#include "catfinder_ue4.h"
+#include "NAOCalls.h"
+
+template <class... Ts>
+void postService(std::shared_ptr<qi::Session> session, const std::string& serviceName, const std::string& operation, Ts&&... args)
+{
+	try {
+		if (!session->isConnected()) {
+			UE_LOG(LogTemp, Warning, TEXT("postService: Session is not connected!"));
+			return;
+		}
+		qi::AnyObject service = session->service(serviceName);
+		service.post(operation, std::forward<Ts>(args)...);
+	}
+	catch (std::exception& e) {
+		UE_LOG(LogTemp, Warning, TEXT("postService: Exception: %s"), ANSI_TO_TCHAR(e.what()));
+	}
+}
+
+template <class R, class... Ts>
+R callService(std::shared_ptr<qi::Session> session, const std::string& serviceName, const std::string& operation, Ts&&... args)
+{
+	try {
+		if (!session->isConnected()) {
+			UE_LOG(LogTemp, Warning, TEXT("callService: Session is not connected!"));
+			return {};
+		}
+		qi::AnyObject service = session->service(serviceName);
+		return service.call<R>(operation, std::forward<Ts>(args)...);
+	}
+	catch (std::exception& e) {
+		UE_LOG(LogTemp, Warning, TEXT("callService: Exception: %s"), ANSI_TO_TCHAR(e.what()));
+	}
+
+	return{};
+}
+
+
+
+int NAOCalls::getTemperature(FString deviceName) {
+	return getALMemoryInt(TEXT("Device/SubDeviceList/") + deviceName + TEXT("/Temperature/Sensor/Value"));
+}
+
+void NAOCalls::angleInterpolation(FString targetJoint, float degrees, float time, bool isAbsolute) {
+	if (!session->isConnected()) return;
+	postService(session, "ALMotion", "angleInterpolation", TCHAR_TO_UTF8(*targetJoint), degrees, time, isAbsolute);
+}
+
+void NAOCalls::moveTo(float xDistanceInMeters, float yDistanceInMeters, float thetaInRadians) {
+	postService(session, "ALMotion", "moveTo", xDistanceInMeters, yDistanceInMeters, thetaInRadians);
+}
+
+
+void NAOCalls::moveToward(float xSpeedRelative, float ySpeedRelative, float thetaSpeedRelative) {
+	postService(session, "ALMotion", "moveToward", xSpeedRelative, ySpeedRelative, thetaSpeedRelative);
+}
+
+void NAOCalls::stopMove() {
+	postService(session, "ALMotion", "stopMove");
+}
+
+void NAOCalls::text2SpeechSay(FString message) {
+	postService(session, "ALTextToSpeech", "say", TCHAR_TO_UTF8(*message));
+}
+
+
+int NAOCalls::getALMemoryInt(FString key) {
+	if (session->isConnected()) return -1;
+	return callService<int>(session, "AlMemory", "getData", TCHAR_TO_UTF8(*key));
+}

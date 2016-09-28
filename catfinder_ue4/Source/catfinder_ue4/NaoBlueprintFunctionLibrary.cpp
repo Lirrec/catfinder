@@ -22,3 +22,32 @@ void UNAOBlueprintFunctionLibrary::shutdownNAOInterfaces() {
 	UE_LOG(LogTemp, Warning, TEXT("NAO: resetting Sessions."));
 	NAOSessionManager::instance()->reset();
 }
+
+
+void UNAOBlueprintFunctionLibrary::text2SpeechSay(UNAOSession* session, FString message) {
+	session->getAPI().text2SpeechSay(message);
+}
+
+void UNAOBlueprintFunctionLibrary::angleInterpolation(UNAOSession* session, FString targetJoint, float degrees, float time, bool isAbsolute) {
+	session->getAPI().angleInterpolation(targetJoint, degrees, time, isAbsolute);
+}
+
+int UNAOBlueprintFunctionLibrary::getTemperature(UNAOSession* session, FString deviceName) {
+	return session->getAPI().getTemperature(deviceName);
+}
+
+void UNAOBlueprintFunctionLibrary::moveTo(UNAOSession* session, float xDistanceInMeters, float yDistanceInMeters, float thetaInRadians) {
+	session->getAPI().moveToward(xDistanceInMeters, yDistanceInMeters, thetaInRadians);
+}
+
+void UNAOBlueprintFunctionLibrary::moveToward(UNAOSession* session, float xSpeedRelative, float ySpeedRelative, float thetaSpeedRelative) {
+	session->getAPI().moveToward(xSpeedRelative, ySpeedRelative, thetaSpeedRelative);
+}
+
+void UNAOBlueprintFunctionLibrary::stopMove(UNAOSession* session) {
+	session->getAPI().stopMove();
+}
+
+int UNAOBlueprintFunctionLibrary::getALMemoryInt(UNAOSession* session, FString key) {
+	return session->getAPI().getALMemoryInt(key);
+}

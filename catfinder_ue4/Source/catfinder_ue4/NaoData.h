@@ -16,10 +16,10 @@ class CATFINDER_UE4_API UNAOData : public UObject
 
 public:
 
-	UFUNCTION(BlueprintCallable, Category = UE_NAO_DATA_CATEGORY)
+	UFUNCTION(BlueprintCallable, Category = "NAO Data")
 	UTemperatureReading* getTemperature(FString device) const;
 
-	UFUNCTION(BlueprintCallable, Category = UE_NAO_DATA_CATEGORY)
+	UFUNCTION(BlueprintCallable, Category = "NAO Data")
 	const TArray<UTemperatureReading*>& getTemperatures() const;
 
 	UPROPERTY(BlueprintReadOnly)
@@ -38,7 +38,7 @@ public:
 	int cpuLoad;
 
 private:
-	friend class UNAOSession;
+	friend class UNAODataCollector;
 
 	void sortData();
 

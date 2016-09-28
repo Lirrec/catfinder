@@ -33,7 +33,3 @@ const std::vector<std::string> sensorNames = {
 	"LShoulderRoll",
 	"RAnkleRoll"
 };
-
-const std::string UE_NAO_CATEGORY = "NAO";
-const std::string UE_NAO_DATA_CATEGORY = "NAO Data";
-const std::string UE_NAO_INTERFACE_CATEGORY = "NAO Interface";
