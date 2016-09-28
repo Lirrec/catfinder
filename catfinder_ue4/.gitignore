@@ -67,3 +67,6 @@ DerivedDataCache/*
 # ThirdParty Libs
 ThirdParty/*
 !ThirdParty/x64.7z
+
+#Starter Content
+Content/StarterContent/*
