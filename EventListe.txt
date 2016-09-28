@@ -1,0 +1,23 @@
++ALAnimatedSpeech -für gesten
+-ALAudioSourceLocalization
+-ALBasicAwareness
+(-)ALBehaviourManager
+(-)ALDiagnosis -evtl für Fehleranzeige
+-ALLocalization
+(-)ALMemory -Sofern neue keys erstellt werden
++ALMotion
+-ALRecharge
+-ALSoundLocalization
+-ALSpeeechRecognition
+-ALStore
+-ALSystem
+-ALTabletService
++ALTextToSpeech
+-ALTracker
+-ALVoiceEmotionAnalysis
+-BacklightingDetection
+-BarcodeReader
++Battery
+-BehavioursRun
+-BodyStiffnessChanged
++ChestButtonPressed
