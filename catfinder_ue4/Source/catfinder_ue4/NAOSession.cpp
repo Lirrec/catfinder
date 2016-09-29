@@ -81,7 +81,8 @@ UNAOData* UNAOSession::getData() {
 }
 
 void UNAOSession::createCallback(FString eventName) {
-	evtMgr.createCallback(eventName);
+	evtMgr.createCallback(TCHAR_TO_ANSI(*eventName));
+	//evtMgr.registerAllEvents();
 }
 
 void UNAOSession::updateData() {

@@ -53,7 +53,7 @@ public:
 		void updateData();
 
 	/** Creates a callback for a specified event that will add an entry to a member-List containing the name of the event.
-		For a full list of possible events, see http://doc.aldebaran.com/2-1/naoqi-eventindex.html
+	For a full list of possible events, see http://doc.aldebaran.com/2-1/naoqi-eventindex.html
 	*/
 	UFUNCTION(BlueprintCallable, Category = "NAO Interface")
 		void createCallback(FString eventName = TEXT("ChestButtonPressed"));
