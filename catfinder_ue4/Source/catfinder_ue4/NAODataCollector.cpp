@@ -1,6 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "catfinder_ue4.h"
+
+#include <future>
+#include <functional>
 #include "NAODataCollector.h"
 
 UNAOData* UNAODataCollector::getData() {
@@ -9,54 +12,45 @@ UNAOData* UNAODataCollector::getData() {
 }
 
 void UNAODataCollector::updateData() {
-	/*UWorld* const world = GetWorld();
-	if (world) {
-	if (lastUpdate + updateDelay < world->RealTimeSeconds) {
-
-	}
-	}*/
 	if (!session->isConnected()) return;
-	getTemperatures();
+	
+	using namespace std::chrono_literals;
+
+	if (collectorFuture.valid()) {
+		auto state = collectorFuture.wait_for(0s);
+
+		// invalidate the future.
+		if (state == std::future_status::ready) { 
+			collectorFuture.get();
+			if ( dataTmp != nullptr) data.Add(dataTmp);
+			dataTmp = nullptr;
+		}
+	}
+	else {
+		collectorFuture = std::async(std::launch::async, std::bind(&UNAODataCollector::collectData, this) );
+	}
+
+
+
+
+}
+
+void UNAODataCollector::collectData() {
+	if (!session->isConnected()) return;
+
+	dataTmp = NewObject<UNAOData>();
+	getTemperatures(dataTmp);
+
+	collectSystemInformation(dataTmp);
 }
 
 
-
-void UNAODataCollector::getTemperatures() {
-	if (temperatureResult.isValid()) {
-
-		if (!temperatureResult.isFinished()) return;
-
-		if (temperatureResult.hasError()) {
-			UE_LOG(LogTemp, Warning, TEXT("QI Future Error: %s"), ANSI_TO_TCHAR(temperatureResult.error().c_str()));
-			return;
-		}
-
-		UNAOData* data = getData();
+void UNAODataCollector::getTemperatures(UNAOData* data) {
+	try {
 
 		if (!data) return;
 		data->TemperatureList.Reset();
 
-
-		std::vector<int> temps = temperatureResult.value();
-
-		int idx = 0;
-		for (int temp : temps) {
-
-			UTemperatureReading* reading = NewObject<UTemperatureReading>();
-			reading->Joint = ANSI_TO_TCHAR(sensorNames[idx++].c_str());
-			reading->Temperature = temp;
-			data->TemperatureList.Add(reading);
-			data->sortData();
-			//UE_LOG(LogTemp, Warning, TEXT("Temp: %s %i"), ANSI_TO_TCHAR(sensorNames[idx++].c_str()), temp);
-		}
-
-		if (idx > 0)
-			UE_LOG(LogTemp, Warning, TEXT("Received new %i temperatures"), idx);
-
-		temperatureResult = qi::Future<std::vector<int>>();
-	}
-	else {
-		if (!session->isConnected()) return;
 		std::vector<std::string> temperatureSensorNames;
 		temperatureSensorNames.reserve(sensorNames.size());
 
@@ -64,28 +58,51 @@ void UNAODataCollector::getTemperatures() {
 			temperatureSensorNames.push_back("Device/SubDeviceList/" + joint + "/Temperature/Sensor/Value");
 		}
 
-		// no valid future, check if we should start the next call
-		// TODO: actually check based on some Timer
-		try {
-			qi::AnyObject alm = session->service("ALMemory");
-			UE_LOG(LogTemp, Warning, TEXT("before first call"));
+		qi::AnyObject alm = session->service("ALMemory");
+		std::vector<int> temps = alm.call<std::vector<int>>("getListData", temperatureSensorNames);
 
-			alm.post("getListData", temperatureSensorNames);
-
-			auto r = alm.call<std::vector<int>>("getListData", temperatureSensorNames);
-
-			UE_LOG(LogTemp, Warning, TEXT("after call, before async"));
-
-			//text2SpeechSay(TEXT("k"));
-
-			auto f = alm.async<std::vector<int>>("getListData", temperatureSensorNames);
-			f.connect([](auto) { UE_LOG(LogTemp, Warning, TEXT("callback")); });
-
-			temperatureResult = alm.async<std::vector<int>>("getListData", temperatureSensorNames);
-			UE_LOG(LogTemp, Warning, TEXT("async finished"));
-		}
-		catch (std::exception& e) {
-			UE_LOG(LogTemp, Warning, TEXT("QI Exception: %s"), ANSI_TO_TCHAR(e.what()));
+		int idx = 0;
+		for (int temp : temps) {
+			UTemperatureReading* reading = NewObject<UTemperatureReading>();
+			reading->Joint = ANSI_TO_TCHAR(sensorNames[idx++].c_str());
+			reading->Temperature = temp;
+			data->TemperatureList.Add(reading);
+			data->sortData();
+			//UE_LOG(LogTemp, Warning, TEXT("Temp: %s %i"), ANSI_TO_TCHAR(sensorNames[idx++].c_str()), temp);
 		}
 	}
+	catch (std::exception& e) {
+		UE_LOG(LogTemp, Warning, TEXT("QI Exception: %s"), ANSI_TO_TCHAR(e.what()));
+	}
+}
+
+void UNAODataCollector::collectSystemInformation(UNAOData* data) {
+
+	try {
+		qi::AnyObject alsystem = session->service("ALSystem");
+
+		int ramFree =		alsystem.call<int>("freeMemory");
+
+		data->ramAvailable = alsystem.call<int>("totalMemory");
+		data->ramUsed =		data->ramAvailable - ramFree;
+
+		data->robotName =	FString(alsystem.call<std::string>("robotName").c_str());
+		data->version =		FString(alsystem.call<std::string>("systemVersion").c_str());
+
+		qi::AnyObject albattery = session->service("ALBattery");
+
+		data->batteryPercentage = albattery.call<int>("getBatteryCharge");
+		
+		qi::AnyObject alconman = session->service("ALConnectionManager");
+		
+		data->connectionState =	FString(alconman.call<std::string>("state").c_str());
+
+		int cpuLoad = 0;
+
+
+	}
+	catch (std::exception& e) {
+		UE_LOG(LogTemp, Warning, TEXT("QI Exception: %s"), ANSI_TO_TCHAR(e.what()));
+	}
+
 }

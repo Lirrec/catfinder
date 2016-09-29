@@ -67,6 +67,7 @@ private:
 
 	std::shared_ptr<qi::Session> session;
 
+	UPROPERTY()
 	UNAODataCollector* dataCollector;
 	NAOEventManager  evtMgr;
 	NAOCalls		 api;

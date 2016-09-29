@@ -1,6 +1,9 @@
 #pragma once
 
 #include "catfinder_ue4.h"
+
+#include <future>
+
 #include "NAODataCollector.generated.h"
 
 UCLASS()
@@ -18,16 +21,20 @@ public:
 
 	void updateData();
 
+	// collects data and stores the result in the dataTmp member
+	void collectData();
+
 private:
 	UPROPERTY()
 	TArray<UNAOData*> data;
 
+	UPROPERTY()
+		UNAOData* dataTmp;
+
 	std::shared_ptr<qi::Session> session;
-
-	float lastUpdate;
-	float updateDelay;
 	
-	void getTemperatures();
+	void collectSystemInformation(UNAOData* data);
+	void getTemperatures(UNAOData* data);
 
-	qi::Future<std::vector<int>> temperatureResult;
+	std::future<void> collectorFuture;
 };

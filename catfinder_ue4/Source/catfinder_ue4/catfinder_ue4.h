@@ -8,6 +8,7 @@
 #include <vector>
 #include <memory>
 #include <utility>
+#include <chrono>
 
 #include <qi/future.hpp>
 #include <qi/signal.hpp>

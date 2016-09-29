@@ -8,7 +8,7 @@
 
 class UNAOSession;
 
-UCLASS()
+UCLASS(BlueprintType)
 class CATFINDER_UE4_API UNAOData : public UObject
 {
 
@@ -37,6 +37,15 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	int cpuLoad;
 
+	UPROPERTY(BlueprintReadOnly)
+	FString version;
+
+	UPROPERTY(BlueprintReadOnly)
+	FString robotName;
+
+	UPROPERTY(BlueprintReadOnly)
+	FString connectionState;
+
 private:
 	friend class UNAODataCollector;
 
@@ -44,5 +53,4 @@ private:
 
 	UPROPERTY()
 	TArray<UTemperatureReading*> TemperatureList;
-
 };
