@@ -68,5 +68,20 @@ void NAOCalls::text2SpeechSay(FString message) {
 
 int NAOCalls::getALMemoryInt(FString key) {
 	if (session->isConnected()) return -1;
-	return callService<int>(session, "AlMemory", "getData", TCHAR_TO_UTF8(*key));
+	return callService<int>(session, "ALMemory", "getData", TCHAR_TO_UTF8(*key));
+}
+
+
+void NAOCalls::setALMemoryString(FString key, FString value) {
+	postService(session, "ALMemory", "insertData", TCHAR_TO_UTF8(*key), TCHAR_TO_UTF8(*value));
+}
+
+FString NAOCalls::getALMemoryString(FString key) {
+	if (session->isConnected()) return FString();
+	std::string re = callService<std::string>(session, "ALMemory", "getData", TCHAR_TO_UTF8(*key));
+	return FString(re.c_str());
+}
+
+void NAOCalls::launchProgram(FString name) {
+	postService(session, "ALLauncher", "launchExecutable", TCHAR_TO_UTF8(*name));
 }

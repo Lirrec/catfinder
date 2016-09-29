@@ -29,10 +29,6 @@ void UNAODataCollector::updateData() {
 	else {
 		collectorFuture = std::async(std::launch::async, std::bind(&UNAODataCollector::collectData, this) );
 	}
-
-
-
-
 }
 
 void UNAODataCollector::collectData() {

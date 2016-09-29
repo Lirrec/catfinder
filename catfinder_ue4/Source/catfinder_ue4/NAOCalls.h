@@ -29,6 +29,11 @@ public:
 
 	int getALMemoryInt		(	FString key						);
 
+	void setALMemoryString	(	FString key, FString value		);
+	FString getALMemoryString(	FString key						);
+
+	void launchProgram		(	FString name					);
+
 private:
 	std::shared_ptr<qi::Session> session;
 };

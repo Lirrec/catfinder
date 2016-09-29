@@ -53,4 +53,15 @@ public:
 		static int getALMemoryInt(UNAOSession* session, FString key);
 
 
+	UFUNCTION(BlueprintCallable, Category = "NAO Interface")
+		static void setALMemoryString(UNAOSession* session, FString key, FString value);
+
+	UFUNCTION(BlueprintCallable, Category = "NAO Interface")
+		static FString getALMemoryString(UNAOSession* session, FString key);
+
+	UFUNCTION(BlueprintCallable, Category = "NAO Interface")
+		static void startStream(UNAOSession* session, FString myIP);
+
+	UFUNCTION(BlueprintCallable, Category = "NAO Interface")
+		static void stopStream(UNAOSession* session);
 };

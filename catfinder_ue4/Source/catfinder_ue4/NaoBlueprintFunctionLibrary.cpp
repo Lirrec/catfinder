@@ -51,3 +51,22 @@ void UNAOBlueprintFunctionLibrary::stopMove(UNAOSession* session) {
 int UNAOBlueprintFunctionLibrary::getALMemoryInt(UNAOSession* session, FString key) {
 	return session->getAPI().getALMemoryInt(key);
 }
+
+
+void  UNAOBlueprintFunctionLibrary::setALMemoryString(UNAOSession* session, FString key, FString value) {
+	session->getAPI().setALMemoryString(key, value);
+}
+
+FString  UNAOBlueprintFunctionLibrary::getALMemoryString(UNAOSession* session, FString key) {
+	return session->getAPI().getALMemoryString(key);
+}
+
+
+void UNAOBlueprintFunctionLibrary::startStream(UNAOSession* session, FString myIP) {
+	session->getAPI().setALMemoryString("catfinder_ip", myIP);
+	session->getAPI().launchProgram("/home/nao/nao_scripts/starth264stream.sh");
+}
+
+void UNAOBlueprintFunctionLibrary::stopStream(UNAOSession* session) {
+	session->getAPI().launchProgram("/home/nao/nao_scripts/stopstream.sh");
+}
