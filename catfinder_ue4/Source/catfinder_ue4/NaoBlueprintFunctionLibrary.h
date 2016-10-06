@@ -7,6 +7,14 @@
 #include "NAOBlueprintFunctionLibrary.generated.h"
 
 
+
+UENUM(BlueprintType)
+enum class ENAOALState : uint8 {
+	solitary UMETA(DisplayName = "active, but not moving or interacting"),
+	interactive UMETA(DisplayName = "interacting with any persons"),
+	disabled UMETA(DisplayName = "not active")
+};
+
 /**
  * 
  */
@@ -67,4 +75,10 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "NAO Interface")
 		static void moveHeadToZeroPosition(UNAOSession* session);
+
+	UFUNCTION(BlueprintCallable, Category = "NAO Interface")
+		static void setAutonomousState(UNAOSession* session, ENAOALState state);
+
+	UFUNCTION(BlueprintCallable, Category = "NAO Interface")
+		static void goToPosture(UNAOSession* session, FString name);
 };

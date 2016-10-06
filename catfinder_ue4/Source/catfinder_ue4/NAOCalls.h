@@ -2,6 +2,8 @@
 
 #include "catfinder_ue4.h"
 
+#include "NaoBlueprintFunctionLibrary.h"
+
 class NAOCalls
 {
 public:
@@ -38,6 +40,10 @@ public:
 	FString getALMemoryString(	FString key						);
 
 	void launchProgram		(	FString name					);
+
+	void goToPosture		(	FString name					);
+
+	void setAutonomousState(ENAOALState newState);
 
 private:
 	std::shared_ptr<qi::Session> session;

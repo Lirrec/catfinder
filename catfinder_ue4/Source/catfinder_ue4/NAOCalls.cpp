@@ -91,3 +91,25 @@ FString NAOCalls::getALMemoryString(FString key) {
 void NAOCalls::launchProgram(FString name) {
 	postService(session, "ALLauncher", "launchExecutable", TCHAR_TO_UTF8(*name));
 }
+
+void NAOCalls::goToPosture(FString name)
+{
+	postService(session, "ALRobotPosture", "goToPosture", TCHAR_TO_UTF8(*name), 1);
+}
+
+void NAOCalls::setAutonomousState(ENAOALState newState)
+{
+	switch ( newState )
+	{
+	case ENAOALState::solitary:
+		postService(session, "ALAutonomousLife", "setState", "solitary");
+		break;
+	case ENAOALState::interactive:
+		postService(session, "ALAutonomousLife", "setState", "interactive");
+		break;
+	case ENAOALState::disabled:
+		postService(session, "ALAutonomousLife", "setState", "disabled");
+		break;
+	default: break;
+	}
+}

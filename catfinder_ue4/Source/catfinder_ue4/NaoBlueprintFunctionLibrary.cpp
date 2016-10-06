@@ -14,8 +14,6 @@ UNAOSession* UNAOBlueprintFunctionLibrary::getNAOInterface(FString ipAddress) {
 
 void UNAOBlueprintFunctionLibrary::initializeNAOInterfaces() {
 	UE_LOG(LogTemp, Warning, TEXT("NAO: initializing Sessions."));
-	//NAOSessionManager::instance()->getSession(TEXT("192.168.1.13"));
-	//NAOSessionManager::instance()->getSession(TEXT("10.215.255.187"));
 }
 
 void UNAOBlueprintFunctionLibrary::shutdownNAOInterfaces() {
@@ -74,4 +72,14 @@ void UNAOBlueprintFunctionLibrary::stopStream(UNAOSession* session) {
 void UNAOBlueprintFunctionLibrary::moveHeadToZeroPosition(UNAOSession* session) {
 	std::vector<std::string> strings = { "HeadYaw","HeadPitch" };
 	session->getAPI().angleInterpolation(qi::AnyValue::from(strings), qi::AnyValue::from(0.52), qi::AnyValue::from(1.0), true);
+}
+
+void UNAOBlueprintFunctionLibrary::setAutonomousState(UNAOSession* session, ENAOALState state)
+{
+	session->getAPI().setAutonomousState(state);
+}
+
+void UNAOBlueprintFunctionLibrary::goToPosture(UNAOSession* session, FString name)
+{
+	session->getAPI().goToPosture(name);
 }
