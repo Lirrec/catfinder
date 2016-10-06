@@ -70,3 +70,8 @@ void UNAOBlueprintFunctionLibrary::startStream(UNAOSession* session, FString myI
 void UNAOBlueprintFunctionLibrary::stopStream(UNAOSession* session) {
 	session->getAPI().launchProgram("/home/nao/nao_scripts/stopstream.sh");
 }
+
+void UNAOBlueprintFunctionLibrary::moveHeadToZeroPosition(UNAOSession* session) {
+	std::vector<std::string> strings = { "HeadYaw","HeadPitch" };
+	session->getAPI().angleInterpolation(qi::AnyValue::from(strings), qi::AnyValue::from(0.52), qi::AnyValue::from(1.0), true);
+}

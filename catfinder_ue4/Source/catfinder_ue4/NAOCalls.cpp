@@ -48,6 +48,12 @@ void NAOCalls::angleInterpolation(FString targetJoint, float degrees, float time
 	postService(session, "ALMotion", "angleInterpolation", TCHAR_TO_UTF8(*targetJoint), degrees, time, isAbsolute);
 }
 
+void NAOCalls::angleInterpolation(qi::AnyValue targetJoint, qi::AnyValue degrees, qi::AnyValue time, bool isAbsolute) {
+	if (!session->isConnected()) return;
+	postService(session, "ALMotion", "angleInterpolation", targetJoint, degrees, time, isAbsolute);
+}
+
+
 void NAOCalls::moveTo(float xDistanceInMeters, float yDistanceInMeters, float thetaInRadians) {
 	postService(session, "ALMotion", "moveTo", xDistanceInMeters, yDistanceInMeters, thetaInRadians);
 }

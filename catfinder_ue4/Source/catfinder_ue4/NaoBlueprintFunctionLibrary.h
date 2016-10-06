@@ -64,4 +64,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "NAO Interface")
 		static void stopStream(UNAOSession* session);
+
+	UFUNCTION(BlueprintCallable, Category = "NAO Interface")
+		static void moveHeadToZeroPosition(UNAOSession* session);
 };

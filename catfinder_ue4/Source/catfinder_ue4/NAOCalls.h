@@ -14,6 +14,11 @@ public:
 								float degrees,
 								float time,
 								bool isAbsolute = true			);
+
+	void angleInterpolation(qi::AnyValue targetJoint,
+		qi::AnyValue degrees,
+		qi::AnyValue time,
+		bool isAbsolute = true);
 		
 	int getTemperature		(	FString deviceName				);
 
