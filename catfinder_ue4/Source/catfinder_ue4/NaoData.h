@@ -46,6 +46,9 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	FString connectionState;
 
+	UPROPERTY(BlueprintReadOnly)
+	FString currentPosture;
+
 private:
 	friend class UNAODataCollector;
 
