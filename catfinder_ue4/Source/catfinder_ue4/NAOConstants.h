@@ -98,4 +98,30 @@ const std::vector<std::string> relevantEventNames = {
 	"TouchChanged"
 };
 
+const std::vector<std::string> sonarLeftValues = {
+	"Device/SubDeviceList/US/Left/Sensor/Value",
+	"Device/SubDeviceList/US/Left/Sensor/Value1",
+	"Device/SubDeviceList/US/Left/Sensor/Value2",
+	"Device/SubDeviceList/US/Left/Sensor/Value3",
+	"Device/SubDeviceList/US/Left/Sensor/Value4",
+	"Device/SubDeviceList/US/Left/Sensor/Value5",
+	"Device/SubDeviceList/US/Left/Sensor/Value6",
+	"Device/SubDeviceList/US/Left/Sensor/Value7",
+	"Device/SubDeviceList/US/Left/Sensor/Value8",
+	"Device/SubDeviceList/US/Left/Sensor/Value9"
+};
+
+const std::vector<std::string> sonarRightValues = {
+	"Device/SubDeviceList/US/Right/Sensor/Value",
+	"Device/SubDeviceList/US/Right/Sensor/Value1",
+	"Device/SubDeviceList/US/Right/Sensor/Value2",
+	"Device/SubDeviceList/US/Right/Sensor/Value3",
+	"Device/SubDeviceList/US/Right/Sensor/Value4",
+	"Device/SubDeviceList/US/Right/Sensor/Value5",
+	"Device/SubDeviceList/US/Right/Sensor/Value6",
+	"Device/SubDeviceList/US/Right/Sensor/Value7",
+	"Device/SubDeviceList/US/Right/Sensor/Value8",
+	"Device/SubDeviceList/US/Right/Sensor/Value9"
+};
+
 const int EVENT_QUEUE_SIZE = 100;

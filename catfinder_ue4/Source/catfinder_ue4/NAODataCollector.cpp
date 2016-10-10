@@ -93,6 +93,10 @@ void UNAODataCollector::collectSystemInformation(UNAOData* data) {
 		
 		data->connectionState =	FString(alconman.call<std::string>("state").c_str());
 
+		qi::AnyObject alposture = session->service("ALRobotPosture");
+
+		data->currentPosture = FString(alposture.call<std::string>("getPosture").c_str());
+
 		int cpuLoad = 0;
 
 
