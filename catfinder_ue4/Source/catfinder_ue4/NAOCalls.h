@@ -42,9 +42,34 @@ public:
 	void launchProgram		(	FString name					);
 
 	void goToPosture		(	FString name					);
+	FString getPosture();
+
+	/**
+	 * Subscribe to any Module derived from ALExtractor. Those modules typically need to be subscribed to to enable their corresponding sensors.
+	 */
+	void subscribeToExtractor(FString name);
+
+	void unsubscribeFromExtractor(FString name);
+
+	std::vector<float> getLeftSonarValues();
+	std::vector<float> getRightSonarValues();
+
 
 	void setAutonomousState(ENAOALState newState);
 
 private:
+	
+	template <class ... Ts>
+	void postService(const std::string& serviceName, const std::string& operation, Ts&& ... args);
+
+	template <class R, class ... Ts>
+	R callService(const std::string& serviceName, const std::string& operation, Ts&& ... args);
+
+	template <class R>
+	R getALMemory(FString key);
+
+	template <class T>
+	void setALMemory(FString key, T&& value);
+
 	std::shared_ptr<qi::Session> session;
 };

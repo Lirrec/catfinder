@@ -4,7 +4,7 @@
 #include "NAOCalls.h"
 
 template <class... Ts>
-void postService(std::shared_ptr<qi::Session> session, const std::string& serviceName, const std::string& operation, Ts&&... args)
+void NAOCalls::postService(const std::string& serviceName, const std::string& operation, Ts&&... args)
 {
 	try {
 		if (!session->isConnected()) {
@@ -20,7 +20,7 @@ void postService(std::shared_ptr<qi::Session> session, const std::string& servic
 }
 
 template <class R, class... Ts>
-R callService(std::shared_ptr<qi::Session> session, const std::string& serviceName, const std::string& operation, Ts&&... args)
+R NAOCalls::callService(const std::string& serviceName, const std::string& operation, Ts&&... args)
 {
 	try {
 		if (!session->isConnected()) {
@@ -37,6 +37,38 @@ R callService(std::shared_ptr<qi::Session> session, const std::string& serviceNa
 	return{};
 }
 
+template <class R>
+R NAOCalls::getALMemory(FString key) {
+	if (session->isConnected())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("getALMemory: Session is not connected, returning empty value!"));
+		return R();
+	}
+	return callService<R>("ALMemory", "getData", TCHAR_TO_UTF8(*key));
+}
+
+template <class T>
+void NAOCalls::setALMemory(FString key, T&& value) {
+	postService("insertData", TCHAR_TO_UTF8(*key), value);
+}
+
+
+int NAOCalls::getALMemoryInt(FString key) {
+	return getALMemory<int>(key);
+}
+
+void NAOCalls::setALMemoryString(FString key, FString value) {
+	return setALMemory(key, TCHAR_TO_UTF8(*value));
+}
+
+FString NAOCalls::getALMemoryString(FString key) {
+	if (session->isConnected()) return FString();
+	std::string re = getALMemory<std::string>(key);
+	return FString(re.c_str());
+}
+
+
+
 
 
 int NAOCalls::getTemperature(FString deviceName) {
@@ -45,56 +77,68 @@ int NAOCalls::getTemperature(FString deviceName) {
 
 void NAOCalls::angleInterpolation(FString targetJoint, float degrees, float time, bool isAbsolute) {
 	if (!session->isConnected()) return;
-	postService(session, "ALMotion", "angleInterpolation", TCHAR_TO_UTF8(*targetJoint), degrees, time, isAbsolute);
+	postService("ALMotion", "angleInterpolation", TCHAR_TO_UTF8(*targetJoint), degrees, time, isAbsolute);
 }
 
 void NAOCalls::angleInterpolation(qi::AnyValue targetJoint, qi::AnyValue degrees, qi::AnyValue time, bool isAbsolute) {
 	if (!session->isConnected()) return;
-	postService(session, "ALMotion", "angleInterpolation", targetJoint, degrees, time, isAbsolute);
+	postService("ALMotion", "angleInterpolation", targetJoint, degrees, time, isAbsolute);
 }
 
 
 void NAOCalls::moveTo(float xDistanceInMeters, float yDistanceInMeters, float thetaInRadians) {
-	postService(session, "ALMotion", "moveTo", xDistanceInMeters, yDistanceInMeters, thetaInRadians);
+	postService("ALMotion", "moveTo", xDistanceInMeters, yDistanceInMeters, thetaInRadians);
 }
 
 
 void NAOCalls::moveToward(float xSpeedRelative, float ySpeedRelative, float thetaSpeedRelative) {
-	postService(session, "ALMotion", "moveToward", xSpeedRelative, ySpeedRelative, thetaSpeedRelative);
+	postService("ALMotion", "moveToward", xSpeedRelative, ySpeedRelative, thetaSpeedRelative);
 }
 
 void NAOCalls::stopMove() {
-	postService(session, "ALMotion", "stopMove");
+	postService("ALMotion", "stopMove");
 }
 
 void NAOCalls::text2SpeechSay(FString message) {
-	postService(session, "ALTextToSpeech", "say", TCHAR_TO_UTF8(*message));
+	postService("ALTextToSpeech", "say", TCHAR_TO_UTF8(*message));
 }
 
-
-int NAOCalls::getALMemoryInt(FString key) {
-	if (session->isConnected()) return -1;
-	return callService<int>(session, "ALMemory", "getData", TCHAR_TO_UTF8(*key));
-}
-
-
-void NAOCalls::setALMemoryString(FString key, FString value) {
-	postService(session, "ALMemory", "insertData", TCHAR_TO_UTF8(*key), TCHAR_TO_UTF8(*value));
-}
-
-FString NAOCalls::getALMemoryString(FString key) {
-	if (session->isConnected()) return FString();
-	std::string re = callService<std::string>(session, "ALMemory", "getData", TCHAR_TO_UTF8(*key));
-	return FString(re.c_str());
-}
 
 void NAOCalls::launchProgram(FString name) {
-	postService(session, "ALLauncher", "launchExecutable", TCHAR_TO_UTF8(*name));
+	postService("ALLauncher", "launchExecutable", TCHAR_TO_UTF8(*name));
 }
 
 void NAOCalls::goToPosture(FString name)
 {
-	postService(session, "ALRobotPosture", "goToPosture", TCHAR_TO_UTF8(*name), 1);
+	postService("goToPosture", TCHAR_TO_UTF8(*name), 1);
+}
+
+FString NAOCalls::getPosture()
+{
+	std::string re = callService<std::string>("ALRobotPosture", "getPosture");
+	return FString(re.c_str());
+}
+
+void NAOCalls::subscribeToExtractor(FString serviceName)
+{
+	postService(TCHAR_TO_UTF8(*serviceName), "subscribe", "catfinder");
+}
+
+void NAOCalls::unsubscribeFromExtractor(FString serviceName)
+{
+	postService(TCHAR_TO_UTF8(*serviceName), "unsubscribe", "catfinder");
+}
+
+std::vector<float> NAOCalls::getLeftSonarValues()
+{
+	std::vector<float> re;
+	return callService<std::vector<float>>("ALMemory", "getListData", sonarLeftValues);
+}
+
+std::vector<float> NAOCalls::getRightSonarValues()
+{
+	std::vector<float> re;
+	return callService<std::vector<float>>("ALMemory", "getListData", sonarRightValues);
 }
 
 void NAOCalls::setAutonomousState(ENAOALState newState)
@@ -102,13 +146,13 @@ void NAOCalls::setAutonomousState(ENAOALState newState)
 	switch ( newState )
 	{
 	case ENAOALState::solitary:
-		postService(session, "ALAutonomousLife", "setState", "solitary");
+		postService("ALAutonomousLife", "setState", "solitary");
 		break;
 	case ENAOALState::interactive:
-		postService(session, "ALAutonomousLife", "setState", "interactive");
+		postService("ALAutonomousLife", "setState", "interactive");
 		break;
 	case ENAOALState::disabled:
-		postService(session, "ALAutonomousLife", "setState", "disabled");
+		postService("ALAutonomousLife", "setState", "disabled");
 		break;
 	default: break;
 	}
