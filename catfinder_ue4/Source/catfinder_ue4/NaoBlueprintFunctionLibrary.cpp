@@ -26,8 +26,12 @@ void UNAOBlueprintFunctionLibrary::text2SpeechSay(UNAOSession* session, FString 
 	session->getAPI().text2SpeechSay(message);
 }
 
-void UNAOBlueprintFunctionLibrary::angleInterpolation(UNAOSession* session, FString targetJoint, float degrees, float time, bool isAbsolute) {
-	session->getAPI().angleInterpolation(targetJoint, degrees, time, isAbsolute);
+void UNAOBlueprintFunctionLibrary::angleInterpolation(UNAOSession* session, FString targetJoint, float rad, float time, bool isAbsolute) {
+	session->getAPI().angleInterpolation(targetJoint, rad, time, isAbsolute);
+}
+
+void UNAOBlueprintFunctionLibrary::angleInterpolationWithSpeed(UNAOSession* session, FString targetJoint, float rad, float speed) {
+	session->getAPI().angleInterpolationWithSpeed(targetJoint, rad, speed);
 }
 
 int UNAOBlueprintFunctionLibrary::getTemperature(UNAOSession* session, FString deviceName) {

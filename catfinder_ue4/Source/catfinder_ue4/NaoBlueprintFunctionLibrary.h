@@ -42,8 +42,17 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "NAO Interface")
 		static void text2SpeechSay(UNAOSession* session, FString message = TEXT("Test!"));
 
+
+	/* rotates a specified joint a number of radians within a timeframe. 
+		Unit for the Timeframe is seconds.
+		If isAbsolute is true, the basic angle for the rotation will be the 0-stance of the joint.
+	*/
 	UFUNCTION(BlueprintCallable, Category = "NAO Interface")
-		static void angleInterpolation(UNAOSession* session, FString targetJoint, float degrees, float time, bool isAbsolute = true);
+		static void angleInterpolation(UNAOSession* session, FString targetJoint, float rad, float time, bool isAbsolute = true);
+
+	// Rotates a specified joint a number of radians at a fraction of the Joints maximum rotational speed.
+	UFUNCTION(BlueprintCallable, Category = "NAO Interface")
+		static void angleInterpolationWithSpeed(UNAOSession* session, FString targetJoint, float rad, float speed = 1.0);
 
 	UFUNCTION(BlueprintCallable, Category = "NAO Interface")
 		static int getTemperature(UNAOSession* session, FString deviceName);

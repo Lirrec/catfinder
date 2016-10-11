@@ -13,14 +13,16 @@ public:
 	void text2SpeechSay		(	FString message = TEXT("Test!")	);
 
 	void angleInterpolation	(	FString targetJoint,
-								float degrees,
+								float rad,
 								float time,
 								bool isAbsolute = true			);
 
 	void angleInterpolation(qi::AnyValue targetJoint,
-		qi::AnyValue degrees,
+		qi::AnyValue rad,
 		qi::AnyValue time,
 		bool isAbsolute = true);
+	
+	void angleInterpolationWithSpeed(FString targetJoint, float rad, float speed);
 		
 	int getTemperature		(	FString deviceName				);
 

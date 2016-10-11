@@ -75,14 +75,19 @@ int NAOCalls::getTemperature(FString deviceName) {
 	return getALMemoryInt(TEXT("Device/SubDeviceList/") + deviceName + TEXT("/Temperature/Sensor/Value"));
 }
 
-void NAOCalls::angleInterpolation(FString targetJoint, float degrees, float time, bool isAbsolute) {
+void NAOCalls::angleInterpolation(FString targetJoint, float rad, float time, bool isAbsolute) {
 	if (!session->isConnected()) return;
-	postService("ALMotion", "angleInterpolation", TCHAR_TO_UTF8(*targetJoint), degrees, time, isAbsolute);
+	postService("ALMotion", "angleInterpolation", TCHAR_TO_UTF8(*targetJoint), rad, time, isAbsolute);
 }
 
-void NAOCalls::angleInterpolation(qi::AnyValue targetJoint, qi::AnyValue degrees, qi::AnyValue time, bool isAbsolute) {
+void NAOCalls::angleInterpolation(qi::AnyValue targetJoint, qi::AnyValue rad, qi::AnyValue time, bool isAbsolute) {
 	if (!session->isConnected()) return;
-	postService("ALMotion", "angleInterpolation", targetJoint, degrees, time, isAbsolute);
+	postService("ALMotion", "angleInterpolation", targetJoint, rad, time, isAbsolute);
+}
+
+void NAOCalls::angleInterpolationWithSpeed(FString targetJoint, float rad, float speed) {
+	if (!session->isConnected()) return;
+	postService("ALMotion", "angleInterpolationWithSpeed", targetJoint, rad);
 }
 
 
@@ -110,7 +115,7 @@ void NAOCalls::launchProgram(FString name) {
 
 void NAOCalls::goToPosture(FString name)
 {
-	postService("goToPosture", TCHAR_TO_UTF8(*name), 1);
+	postService("ALRobotPosture","goToPosture", TCHAR_TO_UTF8(*name), 1);
 }
 
 FString NAOCalls::getPosture()
