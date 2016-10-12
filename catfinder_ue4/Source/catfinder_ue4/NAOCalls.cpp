@@ -49,7 +49,7 @@ R NAOCalls::getALMemory(FString key) {
 
 template <class T>
 void NAOCalls::setALMemory(FString key, T&& value) {
-	postService("insertData", TCHAR_TO_UTF8(*key), value);
+	postService("ALMemory", "insertData", TCHAR_TO_UTF8(*key), value);
 }
 
 
