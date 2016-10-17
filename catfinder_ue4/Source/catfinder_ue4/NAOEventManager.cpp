@@ -45,13 +45,28 @@ void NAOEventManager::createCallback(std::string eventName) {
 	}
 }
 
+FString NAOEventManager::popEvent()
+{
+	FString msg = "";
+	eventQueue.Dequeue(msg);
+	return msg;
+}
+
 //simple callback, writing message to UE-Logs and adding the event to a membered list when called
-qi::AnyReference  NAOEventManager::eventCallback(std::string eventName, const std::vector<qi::AnyReference>& params) {
-	UE_LOG(LogTemp, Warning, TEXT("NAOEvent: '%s'"), ANSI_TO_TCHAR(eventName.c_str()));
+qi::AnyReference NAOEventManager::eventCallback(std::string eventName, const std::vector<qi::AnyReference>& params) {
+
+	FString message = ANSI_TO_TCHAR(eventName.c_str());
+
+	UE_LOG(LogTemp, Warning, TEXT("NAOEvent: '%s'"), *message);
 	//eventMap.insert(std::make_pair(std::string(TCHAR_TO_UTF8(*eventName)), params));
-	if (eventQueue.size() >= EVENT_QUEUE_SIZE)
-		eventQueue.pop_front();
-	eventQueue.push_back(eventName);
+	if (eventQueue.IsFull())
+	{
+		FString msg;
+		if (eventQueue.Dequeue(msg))
+			UE_LOG(LogTemp, Warning, TEXT("Dropped NAOEvent: '%s'"), *msg);
+	}
+
+	eventQueue.Enqueue(message);
 	//returntype needs to be anyreference. this solution was taken form official libqi examples
 	return qi::AnyReference();
 }

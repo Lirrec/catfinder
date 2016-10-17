@@ -90,4 +90,13 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "NAO Interface")
 		static void goToPosture(UNAOSession* session, FString name);
+
+	UFUNCTION(BlueprintCallable, Category = "NAO Interface")
+		static void registerInitialEvents(UNAOSession* session);
+
+	UFUNCTION(BlueprintCallable, Category = "NAO Interface")
+		static FString getOneEvent(UNAOSession* session);
+
+	UFUNCTION(BlueprintCallable, Category = "Miscellaneous")
+		static FString dateToString(FDateTime time);
 };

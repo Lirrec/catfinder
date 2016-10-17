@@ -7,7 +7,7 @@
 class CATFINDER_UE4_API NAOEventManager
 {
 public:
-	NAOEventManager() {};
+	NAOEventManager() : eventQueue(EVENT_QUEUE_SIZE) {};
 	void setSession(std::shared_ptr<qi::Session> s) { session = s; }
 	void registerAllEvents();
 	void registerInitialEvents();
@@ -15,6 +15,10 @@ public:
 	//Creates a callback for a specified event that will add an entry to a member-List containing the name of the event.
 	//For a full list of possible events, see http://doc.aldebaran.com/2-1/naoqi-eventindex.html
 	void createCallback(std::string eventName);
+
+	/// \return a single event from the internal queue, empty string if no event was available
+	FString popEvent();
+
 private:
 	std::shared_ptr<qi::Session> session;
 
@@ -24,6 +28,6 @@ private:
 	std::list<qi::AnyObject> subscriberList;
 
 	std::map<std::string, std::vector<qi::AnyReference>> eventMap;
-	std::deque<std::string> eventQueue;
+	TCircularQueue<FString> eventQueue;
 
 };

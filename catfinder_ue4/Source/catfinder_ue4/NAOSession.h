@@ -37,6 +37,10 @@ public:
 		return api;
 	}
 
+	NAOEventManager& getEventManager() {
+		return evtMgr;
+	}
+
 	UFUNCTION(BluePrintCallable, Category = "NAO Interface")
 	ENAOIState getState();
 	

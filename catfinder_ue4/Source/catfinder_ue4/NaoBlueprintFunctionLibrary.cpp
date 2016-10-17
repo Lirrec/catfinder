@@ -102,3 +102,20 @@ void UNAOBlueprintFunctionLibrary::goToPosture(UNAOSession* session, FString nam
 	checkf(session != nullptr, TEXT("UNAOBlueprintLibrary: Expected NAOSession, got nullptr!"));
 	session->getAPI().goToPosture(name);
 }
+
+void UNAOBlueprintFunctionLibrary::registerInitialEvents(UNAOSession* session)
+{
+	checkf(session != nullptr, TEXT("UNAOBlueprintLibrary: Expected NAOSession, got nullptr!"));
+	session->getEventManager().registerInitialEvents();
+}
+
+FString UNAOBlueprintFunctionLibrary::getOneEvent(UNAOSession* session)
+{
+	checkf(session != nullptr, TEXT("UNAOBlueprintLibrary: Expected NAOSession, got nullptr!"));
+	return session->getEventManager().popEvent();
+}
+
+FString UNAOBlueprintFunctionLibrary::dateToString(FDateTime time)
+{
+	return time.GetTimeOfDay().ToString();
+}
