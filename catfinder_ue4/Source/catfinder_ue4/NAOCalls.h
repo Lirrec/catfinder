@@ -59,6 +59,12 @@ public:
 
 	void setAutonomousState(ENAOALState newState);
 
+	void setWholeBodyEnabled(bool state);
+
+	void setEnableEffectorControl(FString effectorName, bool state);
+
+	void setEffectorControl(FString effecotrName, float xCoord, float yCoord, float zCoord);
+
 private:
 	
 	template <class ... Ts>

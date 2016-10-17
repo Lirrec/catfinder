@@ -162,3 +162,18 @@ void NAOCalls::setAutonomousState(ENAOALState newState)
 	default: break;
 	}
 }
+
+void NAOCalls::setWholeBodyEnabled(bool state) {
+	postService("ALMotion", "wbEnable", state);
+}
+
+void NAOCalls::setEnableEffectorControl(FString effectorName, bool state) {
+	postService("ALMotion", "wbEnableEffectorControl", TCHAR_TO_UTF8(*effectorName), state);
+}
+
+void NAOCalls::setEffectorControl(FString effecotrName, float xCoord, float yCoord, float zCoord) {
+	std::vector<float> coordTriple = { xCoord, yCoord, zCoord };
+	 qi::AnyValue coordTripleAV;
+	 coordTripleAV = coordTripleAV.from(coordTriple);
+	postService("ALMotion", "wbSetEffectorControl", coordTriple);
+}
