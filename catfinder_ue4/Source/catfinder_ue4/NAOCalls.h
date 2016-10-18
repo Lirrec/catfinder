@@ -63,7 +63,7 @@ public:
 
 	void setEnableEffectorControl(FString effectorName, bool state);
 
-	void setEffectorControl(FString effecotrName, float xCoord, float yCoord, float zCoord);
+	void setEffectorControl(FString effectorName, float xCoord, float yCoord, float zCoord);
 
 private:
 	

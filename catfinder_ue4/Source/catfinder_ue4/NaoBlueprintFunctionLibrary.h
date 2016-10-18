@@ -97,6 +97,15 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "NAO Interface")
 		static FString getOneEvent(UNAOSession* session);
 
-	UFUNCTION(BlueprintCallable, Category = "Miscellaneous")
+	UFUNCTION(BlueprintCallable, Category = "NAO Interface")
 		static FString dateToString(FDateTime time);
+
+	UFUNCTION(BlueprintCallable, Category = "NAO Interface")
+	static void setWholeBodyEnabled(UNAOSession* session, bool state);
+
+	UFUNCTION(BlueprintCallable, Category = "NAO Interface")
+	static void setEnableEffectorControl(UNAOSession* session, FString effectorName, bool state);
+
+	UFUNCTION(BlueprintCallable, Category = "NAO Interface")
+	static void setEffectorControl(UNAOSession* session, FString effectorName, FVector vec);
 };

@@ -119,3 +119,21 @@ FString UNAOBlueprintFunctionLibrary::dateToString(FDateTime time)
 {
 	return time.GetTimeOfDay().ToString();
 }
+
+
+void UNAOBlueprintFunctionLibrary::setWholeBodyEnabled(UNAOSession* session, bool state) {
+	checkf(session != nullptr, TEXT("UNAOBlueprintLibrary: Expected NAOSession, got nullptr!"));
+	session->getAPI().setWholeBodyEnabled(state);
+}
+
+
+void UNAOBlueprintFunctionLibrary::setEnableEffectorControl(UNAOSession* session, FString effectorName, bool state) {
+	checkf(session != nullptr, TEXT("UNAOBlueprintLibrary: Expected NAOSession, got nullptr!"));
+	session->getAPI().setEnableEffectorControl(effectorName, state);
+}
+
+
+void UNAOBlueprintFunctionLibrary::setEffectorControl(UNAOSession* session, FString effectorName, FVector vec) {
+	checkf(session != nullptr, TEXT("UNAOBlueprintLibrary: Expected NAOSession, got nullptr!"));
+	session->getAPI().setEffectorControl(effectorName, vec.X, vec.Y, vec.Z);
+}
