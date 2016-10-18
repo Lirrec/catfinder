@@ -66,6 +66,38 @@ qi::AnyReference NAOEventManager::eventCallback(std::string eventName, const std
 			UE_LOG(LogTemp, Warning, TEXT("Dropped NAOEvent: '%s'"), *msg);
 	}
 
+	for (qi::AnyReference anyref : params)
+	{
+		try {
+			std::string str = anyref.to<std::string>();
+			message += TEXT(" - ");
+			message += ANSI_TO_TCHAR(str.c_str());
+			continue;
+		} catch (...) {}
+
+
+		try {
+			int i = anyref.to<int>();
+			message += TEXT(" - ");
+			message += FString::FromInt(i);
+			continue;
+		}
+		catch (...) {}
+		
+		
+		
+
+		try {
+			float f = anyref.to<float>();
+			message += TEXT(" - ");
+			message += FString::SanitizeFloat(f);
+			continue;
+		}
+		catch (...) {}
+	}
+
+
+
 	eventQueue.Enqueue(message);
 	//returntype needs to be anyreference. this solution was taken form official libqi examples
 	return qi::AnyReference();

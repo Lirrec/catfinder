@@ -13,6 +13,7 @@
 #include <qi/future.hpp>
 #include <qi/signal.hpp>
 #include <qi/AnyObject.hpp>
+#include <qi/AnyValue.hpp>
 #include <qi/session.hpp>
 #include "NAOData.h"
 #include "NAOConstants.h"
