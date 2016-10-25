@@ -182,3 +182,13 @@ void NAOCalls::rest()
 {
 	postService("ALMotion", "rest");
 }
+
+void NAOCalls::playWebAudioStream(FString url, float volume, float balance)
+{
+	postService("ALAudioPlayer", "playWebStream", std::string{ TCHAR_TO_UTF8(*url) }, volume, balance);
+}
+
+void NAOCalls::stopAllAudioSources()
+{
+	postService("ALAudioPlayer", "stopAll");
+}

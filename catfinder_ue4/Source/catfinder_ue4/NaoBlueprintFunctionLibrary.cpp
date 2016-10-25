@@ -149,3 +149,15 @@ void UNAOBlueprintFunctionLibrary::rest(UNAOSession* session)
 	checkf(session != nullptr, TEXT("UNAOBlueprintLibrary: Expected NAOSession, got nullptr!"));
 	session->getAPI().rest();
 }
+
+void UNAOBlueprintFunctionLibrary::playWebAudioStream(UNAOSession* session, FString url, float volume, float balance)
+{
+	checkf(session != nullptr, TEXT("UNAOBlueprintLibrary: Expected NAOSession, got nullptr!"));
+	session->getAPI().playWebAudioStream(url, volume, balance);
+}
+
+void UNAOBlueprintFunctionLibrary::stopAllAudioSources(UNAOSession* session)
+{
+	checkf(session != nullptr, TEXT("UNAOBlueprintLibrary: Expected NAOSession, got nullptr!"));
+	session->getAPI().stopAllAudioSources();
+}

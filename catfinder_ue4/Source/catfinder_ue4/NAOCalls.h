@@ -76,6 +76,10 @@ public:
 	 */
 	void rest();
 
+	void playWebAudioStream(FString url, float volume, float balance);
+
+	void stopAllAudioSources();
+
 private:
 	
 	template <class ... Ts>

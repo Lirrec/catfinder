@@ -122,4 +122,10 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "NAO Interface")
 	static void rest(UNAOSession* session);
+
+	UFUNCTION(BlueprintCallable, Category = "NAO Interface")
+		static void playWebAudioStream(UNAOSession* session, FString url, float volume = 1, float balance = 0);
+
+	UFUNCTION(BlueprintCallable, Category = "NAO Interface")
+		static void stopAllAudioSources(UNAOSession* session);
 };
