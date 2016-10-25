@@ -18,8 +18,8 @@ enum class ENAOALState : uint8 {
 UENUM(BluePrintType)
 enum class ENAOFRAMES : uint8 {
 	torso = 0 UMETA(DisplayName = "Frame Torso (origin in the center of the torso)"),
-	robot UMETA(DisplayName = "Frame Robot (origin is the average of both feet positions)"),
-	world UMETA(DisplayName = "Frame World (constant origin which is set at boot/startup)")
+	world UMETA(DisplayName = "Frame World (constant origin which is set at boot/startup)"),
+	robot UMETA(DisplayName = "Frame Robot (origin is the average of both feet positions)")
 };
 
 /**
