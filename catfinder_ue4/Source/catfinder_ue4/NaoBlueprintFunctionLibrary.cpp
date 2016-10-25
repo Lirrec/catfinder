@@ -133,7 +133,19 @@ void UNAOBlueprintFunctionLibrary::setEnableEffectorControl(UNAOSession* session
 }
 
 
-void UNAOBlueprintFunctionLibrary::setEffectorControl(UNAOSession* session, FString effectorName, FVector vec) {
+void UNAOBlueprintFunctionLibrary::setEffectorControl(UNAOSession* session, FString effectorName, FVector position) {
 	checkf(session != nullptr, TEXT("UNAOBlueprintLibrary: Expected NAOSession, got nullptr!"));
-	session->getAPI().setEffectorControl(effectorName, vec.X, vec.Y, vec.Z);
+	session->getAPI().setEffectorControl(effectorName, position );
+}
+
+void UNAOBlueprintFunctionLibrary::setPositions(UNAOSession* session, FString effectorName, ENAOFRAMES frame, FVector position, FVector orientation, float fractionMaxSpeed)
+{
+	checkf(session != nullptr, TEXT("UNAOBlueprintLibrary: Expected NAOSession, got nullptr!"));
+	session->getAPI().setPositions(std::vector<std::string>{ TCHAR_TO_UTF8(*effectorName) }, frame, position, orientation, fractionMaxSpeed);
+}
+
+void UNAOBlueprintFunctionLibrary::rest(UNAOSession* session)
+{
+	checkf(session != nullptr, TEXT("UNAOBlueprintLibrary: Expected NAOSession, got nullptr!"));
+	session->getAPI().rest();
 }

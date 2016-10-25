@@ -76,22 +76,20 @@ int NAOCalls::getTemperature(FString deviceName) {
 }
 
 void NAOCalls::angleInterpolation(FString targetJoint, float rad, float time, bool isAbsolute) {
-	if (!session->isConnected()) return;
 	postService("ALMotion", "angleInterpolation", TCHAR_TO_UTF8(*targetJoint), rad, time, isAbsolute);
 }
 
 void NAOCalls::angleInterpolation(qi::AnyValue targetJoint, qi::AnyValue rad, qi::AnyValue time, bool isAbsolute) {
-	if (!session->isConnected()) return;
 	postService("ALMotion", "angleInterpolation", targetJoint, rad, time, isAbsolute);
 }
 
 void NAOCalls::angleInterpolationWithSpeed(FString targetJoint, float rad, float speed) {
-	if (!session->isConnected()) return;
 	postService("ALMotion", "angleInterpolationWithSpeed", targetJoint, rad);
 }
 
 
 void NAOCalls::moveTo(float xDistanceInMeters, float yDistanceInMeters, float thetaInRadians) {
+	if (!session->isConnected()) return;
 	postService("ALMotion", "moveTo", xDistanceInMeters, yDistanceInMeters, thetaInRadians);
 }
 
@@ -136,13 +134,11 @@ void NAOCalls::unsubscribeFromExtractor(FString serviceName)
 
 std::vector<float> NAOCalls::getLeftSonarValues()
 {
-	std::vector<float> re;
 	return callService<std::vector<float>>("ALMemory", "getListData", sonarLeftValues);
 }
 
 std::vector<float> NAOCalls::getRightSonarValues()
 {
-	std::vector<float> re;
 	return callService<std::vector<float>>("ALMemory", "getListData", sonarRightValues);
 }
 
@@ -171,9 +167,18 @@ void NAOCalls::setEnableEffectorControl(FString effectorName, bool state) {
 	postService("ALMotion", "wbEnableEffectorControl", TCHAR_TO_UTF8(*effectorName), state);
 }
 
-void NAOCalls::setEffectorControl(FString effectorName, float xCoord, float yCoord, float zCoord) {
-	std::vector<float> coordTriple = { xCoord, yCoord, zCoord };
-	 qi::AnyValue coordTripleAV;
-	 coordTripleAV = coordTripleAV.from(coordTriple);
-	postService("ALMotion", "wbSetEffectorControl", coordTriple);
+void NAOCalls::setEffectorControl(FString effectorName, FVector Coord) {
+	postService("ALMotion", "wbSetEffectorControl", std::vector<float> { Coord.X, Coord.Y, Coord.Z });
+}
+
+void NAOCalls::setPositions(std::vector<std::string> effectorNames, ENAOFRAMES frame, FVector position, FVector orientation, float fractionMaxSpeed)
+{
+	std::vector<float> position6d { position.X, position.Y, position.Z, orientation.X, orientation.Y, orientation.Z };
+	int axismask = 63;
+	postService("ALMotion", "setPositions", effectorNames, (int)frame, position6d, fractionMaxSpeed, axismask);
+}
+
+void NAOCalls::rest()
+{
+	postService("ALMotion", "rest");
 }

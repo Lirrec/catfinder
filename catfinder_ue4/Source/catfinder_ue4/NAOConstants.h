@@ -124,4 +124,5 @@ const std::vector<std::string> sonarRightValues = {
 	"Device/SubDeviceList/US/Right/Sensor/Value9"
 };
 
+
 const int EVENT_QUEUE_SIZE = 100;

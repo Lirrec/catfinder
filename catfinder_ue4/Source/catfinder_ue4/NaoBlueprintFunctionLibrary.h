@@ -15,6 +15,13 @@ enum class ENAOALState : uint8 {
 	disabled UMETA(DisplayName = "not active")
 };
 
+UENUM(BluePrintType)
+enum class ENAOFRAMES : uint8 {
+	torso = 0 UMETA(DisplayName = "Frame Torso (origin in the center of the torso)"),
+	robot UMETA(DisplayName = "Frame Robot (origin is the average of both feet positions)"),
+	world UMETA(DisplayName = "Frame World (constant origin which is set at boot/startup)")
+};
+
 /**
  * 
  */
@@ -107,5 +114,12 @@ public:
 	static void setEnableEffectorControl(UNAOSession* session, FString effectorName, bool state);
 
 	UFUNCTION(BlueprintCallable, Category = "NAO Interface")
-	static void setEffectorControl(UNAOSession* session, FString effectorName, FVector vec);
+	static void setEffectorControl(UNAOSession* session, FString effectorName, FVector position);
+
+
+	UFUNCTION(BlueprintCallable, Category = "NAO Interface")
+	static void setPositions(UNAOSession* session, FString effectorName, ENAOFRAMES frame, FVector position, FVector orientation, float fractionMaxSpeed = 0.5f);
+
+	UFUNCTION(BlueprintCallable, Category = "NAO Interface")
+	static void rest(UNAOSession* session);
 };

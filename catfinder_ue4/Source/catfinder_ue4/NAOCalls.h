@@ -63,7 +63,18 @@ public:
 
 	void setEnableEffectorControl(FString effectorName, bool state);
 
-	void setEffectorControl(FString effectorName, float xCoord, float yCoord, float zCoord);
+	void setEffectorControl(FString effectorName, FVector Coord);
+
+	/**
+	 * @param position x,y,z, in meters
+	 * @param orientation wx,wy,wz in rad
+	 */
+	void setPositions(std::vector<std::string> effectorNames, ENAOFRAMES frame, FVector position, FVector orientation, float fractionMaxSpeed = 0.5f);
+
+	/**
+	 * Calls ALMotion.rest. Puts the robot into a 'rest' state where no stiffness or power is applied to its joints
+	 */
+	void rest();
 
 private:
 	
