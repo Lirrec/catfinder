@@ -21,6 +21,11 @@ void UNAOBlueprintFunctionLibrary::shutdownNAOInterfaces() {
 	NAOSessionManager::instance()->reset();
 }
 
+bool UNAOBlueprintFunctionLibrary::isConnected(UNAOSession* session)
+{
+	UE_LOG(LogTemp, Warning, TEXT("NAO: resetting Sessions."));
+	return session->isConnected();
+}
 
 void UNAOBlueprintFunctionLibrary::text2SpeechSay(UNAOSession* session, FString message) {
 	checkf(session != nullptr, TEXT("UNAOBlueprintLibrary: Expected NAOSession, got nullptr!"));

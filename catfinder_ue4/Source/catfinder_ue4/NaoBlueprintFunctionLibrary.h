@@ -44,7 +44,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "NAO Interface")
 		static void shutdownNAOInterfaces();
 
-
+	UFUNCTION(BlueprintCallable, Category = "NAO Interface")
+		static bool isConnected(UNAOSession* session);
 
 	UFUNCTION(BlueprintCallable, Category = "NAO Interface")
 		static void text2SpeechSay(UNAOSession* session, FString message = TEXT("Test!"));

@@ -62,10 +62,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "NAO Interface")
 		void createCallback(FString eventName = TEXT("ChestButtonPressed"));
 
+	UFUNCTION(BlueprintCallable, Category = "NAO Interface")
+		bool isConnected();
 
 private:
 
-	bool isConnected();
 
 	ENAOIState State = ENAOIState::disconnected;
 
